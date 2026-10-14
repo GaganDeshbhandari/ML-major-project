@@ -1,28 +1,47 @@
-"""Evidence retrieval via Tavily Search API.
+"""Evidence retrieval via Tavily Search API + cross-encoder reranking.
 
 Public entry point:
-    retrieve_evidence(claim: str, top_k: int = 5) -> list[dict]
+    retrieve_evidence(claim: str, top_k: int = 5, *, reranker=None, use_reranker=True)
 
-Each returned record has exactly:
+Stage 2 flow (default):
+    1. Fetch ``CANDIDATE_LIMIT`` (15) candidates from Tavily.
+    2. Clean and deduplicate them (URL dedupe, blank filtering).
+    3. Score each claim–candidate pair with the cross-encoder
+       (``cross-encoder/ms-marco-MiniLM-L-6-v2`` by default).
+    4. Sort by the cross-encoder score and return the top ``top_k``
+       records, capped at ``MAX_RESULTS`` (5).
+
+Each reranked record contains:
     - title: str (may be "" if the source omits it)
-    - url: str (non-empty; records without a URL are dropped)
-    - content: str (non-empty evidence text, preserved verbatim apart
-      from surrounding-whitespace trimming; never invented or rewritten)
+    - url: str (non-empty)
+    - content: str (evidence text, preserved verbatim apart from
+      surrounding-whitespace trimming; never invented or rewritten)
     - relevance_score: float (Tavily ``score`` coerced to float,
-      0.0 when missing or non-numeric)
+      0.0 when missing or non-numeric — Tavily's own ranking signal)
+    - rerank_score: float (cross-encoder claim–evidence score; the two
+      scores live on unrelated scales and must not be treated as
+      equivalent — final ordering uses ``rerank_score``)
+
+With ``use_reranker=False`` the module keeps its Stage 1 behavior:
+fetch ``min(top_k, 5)`` from Tavily, clean/dedupe, sort by
+``relevance_score`` — records then have exactly the four original keys.
 
 Behavior:
-    - Validates ``claim`` (non-empty string) and ``top_k`` (int in 1..N)
-      with ``ValueError`` on bad input.
+    - Validates ``claim`` (non-empty string) and ``top_k`` (int >= 1,
+      bool rejected) with ``ValueError`` on bad input.
     - Loads ``TAVILY_API_KEY`` from the project-root ``.env`` via
       ``python-dotenv`` (existing environment variables take precedence).
       Raises :class:`MissingAPIKeyError` when absent or blank. The key
       value is never logged or printed.
     - Wraps any Tavily/API failure in :class:`EvidenceSearchError`
       (chained with ``from``) instead of returning fabricated evidence.
-    - Drops records with missing URLs or blank content, deduplicates by
-      URL (keeping the highest score), sorts by score descending, and
-      returns at most ``min(top_k, MAX_RESULTS)`` records.
+    - Reranker load/inference failures raise :class:`RerankerError`
+      (chained); there is no silent fallback to Tavily ordering.
+    - An injected ``reranker`` object exposing
+      ``score(claim, texts) -> list[float]`` is used as-is (for tests
+      and future replacements); otherwise a lazily-loaded, cached
+      default cross-encoder is used. Importing this module never loads
+      model weights.
 """
 
 from __future__ import annotations
@@ -34,7 +53,11 @@ from typing import Any
 from dotenv import load_dotenv
 from tavily import TavilyClient
 
+#: Final records returned at most (MVP cap).
 MAX_RESULTS = 5
+
+#: Tavily candidates fetched per claim before reranking.
+CANDIDATE_LIMIT = 15
 
 
 class EvidenceRetrievalError(Exception):
@@ -47,6 +70,10 @@ class MissingAPIKeyError(EvidenceRetrievalError):
 
 class EvidenceSearchError(EvidenceRetrievalError):
     """Raised when the Tavily search request or response handling fails."""
+
+
+class RerankerError(EvidenceRetrievalError):
+    """Raised when cross-encoder loading or scoring fails."""
 
 
 def _project_root() -> Path:
@@ -100,14 +127,15 @@ def _coerce_score(value: Any) -> float:
         return 0.0
 
 
-def _clean_results(raw_results: Any, limit: int) -> list[dict]:
-    """Filter, deduplicate, sort, and limit raw Tavily results.
+def _clean_results(raw_results: Any, limit: int | None) -> list[dict]:
+    """Filter, deduplicate, sort, and optionally limit raw Tavily results.
 
     - Skips non-dict entries.
     - Drops entries with a missing/blank URL or blank content.
-    - Deduplicates by stripped URL, keeping the highest score.
+    - Deduplicates by stripped URL, keeping the highest relevance_score.
     - Sorts by relevance_score descending; stable for ties.
-    - Returns at most ``limit`` records.
+    - Returns at most ``limit`` records; ``None`` means no slicing
+      (used for the pre-rerank candidate pool).
     """
     if not isinstance(raw_results, list):
         raise EvidenceSearchError(
@@ -139,20 +167,66 @@ def _clean_results(raw_results: Any, limit: int) -> list[dict]:
         if existing is None or record["relevance_score"] > existing["relevance_score"]:
             best_by_url[url] = record
     ranked = sorted(best_by_url.values(), key=lambda r: r["relevance_score"], reverse=True)
+    if limit is None:
+        return ranked
     return ranked[:limit]
 
 
-def retrieve_evidence(claim: str, top_k: int = 5) -> list[dict]:
-    """Retrieve web evidence for a factual claim via Tavily.
+def _apply_reranking(candidates: list[dict], claim: str, reranker: Any) -> list[dict]:
+    """Attach ``rerank_score`` and sort candidates by it, highest first.
+
+    The injected ``reranker`` must expose
+    ``score(claim, texts) -> list[float]``. Non-``RerankerError``
+    failures are wrapped in :class:`RerankerError` (chained); a
+    length-mismatched score list also raises :class:`RerankerError`.
+    """
+    texts = [c["content"] for c in candidates]
+    try:
+        raw_scores = reranker.score(claim, texts)
+    except RerankerError:
+        raise
+    except Exception as exc:
+        raise RerankerError(f"Reranker inference failed: {exc}") from exc
+    try:
+        scores = [float(s) for s in raw_scores]
+    except (TypeError, ValueError) as exc:
+        raise RerankerError(f"Reranker returned non-numeric scores: {exc}") from exc
+    if len(scores) != len(candidates):
+        raise RerankerError(
+            f"Reranker returned {len(scores)} scores for {len(candidates)} candidates."
+        )
+    for record, score in zip(candidates, scores):
+        record["rerank_score"] = score
+    return sorted(candidates, key=lambda r: r["rerank_score"], reverse=True)
+
+
+def retrieve_evidence(
+    claim: str,
+    top_k: int = 5,
+    *,
+    reranker: Any | None = None,
+    use_reranker: bool = True,
+) -> list[dict]:
+    """Retrieve and rerank web evidence for a factual claim.
 
     Args:
         claim: Factual claim to search for. Must be a non-empty string.
         top_k: Maximum records to return. Capped at 5 for this MVP.
+        reranker: Optional scorer exposing
+            ``score(claim, texts) -> list[float]``. Injected fakes keep
+            unit tests offline. When ``None`` and ``use_reranker`` is
+            true, a lazily-loaded cached default cross-encoder is used.
+        use_reranker: When false, skip reranking and preserve the exact
+            Stage 1 behavior (Tavily order, four record keys) for
+            baseline comparisons.
 
     Returns:
-        List of at most ``min(top_k, 5)`` dicts with keys ``title``,
-        ``url``, ``content``, ``relevance_score``, sorted by score
-        descending. May be shorter (or empty) after cleaning.
+        Reranked mode: at most ``min(top_k, 5)`` dicts with keys
+        ``title``, ``url``, ``content``, ``relevance_score``,
+        ``rerank_score``, sorted by ``rerank_score`` descending.
+        Baseline mode: the four original keys sorted by
+        ``relevance_score``. Either may be shorter (or empty) after
+        cleaning; empty candidates never trigger a model load.
 
     Raises:
         ValueError: If ``claim`` is empty/not a string, or ``top_k``
@@ -160,6 +234,7 @@ def retrieve_evidence(claim: str, top_k: int = 5) -> list[dict]:
         MissingAPIKeyError: If ``TAVILY_API_KEY`` is not configured.
         EvidenceSearchError: If client creation, the API call, or
             response handling fails. The original exception is chained.
+        RerankerError: If reranker loading or scoring fails.
     """
     cleaned_claim, effective_top_k = _validate_inputs(claim, top_k)
     api_key = _get_api_key()
@@ -169,8 +244,9 @@ def retrieve_evidence(claim: str, top_k: int = 5) -> list[dict]:
         raise
     except Exception as exc:
         raise EvidenceSearchError(f"Tavily client initialization failed: {exc}") from exc
+    fetch_n = CANDIDATE_LIMIT if use_reranker else effective_top_k
     try:
-        response = client.search(query=cleaned_claim, max_results=effective_top_k)
+        response = client.search(query=cleaned_claim, max_results=fetch_n)
     except Exception as exc:
         raise EvidenceSearchError(f"Tavily search failed: {exc}") from exc
     if isinstance(response, dict):
@@ -182,4 +258,17 @@ def retrieve_evidence(claim: str, top_k: int = 5) -> list[dict]:
             "Unexpected search response shape: "
             f"expected dict or list, got {type(response).__name__}."
         )
-    return _clean_results(raw_results, effective_top_k)
+    if not use_reranker:
+        return _clean_results(raw_results, effective_top_k)
+    candidates = _clean_results(raw_results, None)
+    if not candidates:
+        return []
+    scorer = reranker
+    if scorer is None:
+        # Local import: keeps module import side-effect free (no model
+        # load) and avoids a hard dependency at import time.
+        from src.retrieval.reranker import get_default_reranker
+
+        scorer = get_default_reranker()
+    reranked = _apply_reranking(candidates, cleaned_claim, scorer)
+    return reranked[:effective_top_k]
