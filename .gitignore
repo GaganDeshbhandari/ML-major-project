@@ -9,3 +9,5 @@ graphify-out
 .env
 
 venv312
+
+__pycache__
