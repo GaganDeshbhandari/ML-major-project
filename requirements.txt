@@ -1,6 +1,6 @@
-# Optional dependencies for FactLLaMA inference (QLoRA / 4-bit).
+# FactLLaMA inference dependencies (QLoRA / 4-bit).
 # Install into a CUDA-capable environment:
-#   pip install -r requirements-factllama.txt
+#   pip install -r requirements.txt
 torch>=2.2
 transformers>=4.43
 peft>=0.11

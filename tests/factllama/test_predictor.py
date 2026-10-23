@@ -12,7 +12,11 @@ import pytest
 
 import src.factllama.predictor as pr
 from src.factllama.model_loader import FactLLaMAConfig
-from src.factllama.prompt_builder import PromptBuildError
+from src.factllama.prompt_builder import (
+    SYSTEM_PROMPT,
+    EvidenceBudget,
+    PromptBuildError,
+)
 
 
 class _StubGenerator:
@@ -48,10 +52,10 @@ def test_predict_builds_system_and_user_messages():
 
     messages = generator.calls[0]
     assert messages[0]["role"] == "system"
-    assert "outside knowledge" in messages[0]["content"].lower()
+    assert messages[0]["content"] == SYSTEM_PROMPT
     assert messages[1]["role"] == "user"
-    assert "1. evidence one" in messages[1]["content"]
-    assert "2. evidence two" in messages[1]["content"]
+    assert "[1] evidence one" in messages[1]["content"]
+    assert "[2] evidence two" in messages[1]["content"]
     assert messages[1]["content"].rstrip().endswith("Verdict:")
 
 
@@ -84,6 +88,56 @@ def test_predict_batch_preserves_order():
     )
 
     assert [result.claim for result in results] == ["first", "second"]
+
+
+def test_predict_reports_truncation_metadata():
+    generator = _StubGenerator("true")
+    predictor = pr.FactLLaMAPredictor(
+        generator=generator,
+        evidence_budget=EvidenceBudget(
+            max_tokens=10, chars_per_token=1.0, min_truncate_tokens=1
+        ),
+    )
+
+    result = predictor.predict("claim", ["a" * 40, "b" * 40])
+
+    assert result.evidence_truncated is True
+    assert result.evidence_used == 10
+    assert result.evidence_excluded == 1
+    assert "[2]" not in generator.calls[0][1]["content"]
+
+
+def test_predict_reports_excluded_evidence():
+    generator = _StubGenerator("true")
+    predictor = pr.FactLLaMAPredictor(
+        generator=generator,
+        evidence_budget=EvidenceBudget(
+            max_tokens=4, chars_per_token=1.0, min_truncate_tokens=4
+        ),
+    )
+
+    result = predictor.predict("claim", ["abc", "defgh"])
+
+    assert result.evidence_truncated is False
+    assert result.evidence_excluded == 1
+    assert "[1] abc" in generator.calls[0][1]["content"]
+    assert "defgh" not in generator.calls[0][1]["content"]
+
+
+def test_predict_uses_config_evidence_budget():
+    generator = _StubGenerator("true")
+    predictor = pr.FactLLaMAPredictor(
+        config=FactLLaMAConfig(
+            max_evidence_tokens=5, evidence_chars_per_token=1.0
+        ),
+        generator=generator,
+    )
+
+    result = predictor.predict("claim", ["abcdefgh"])
+
+    assert result.evidence_truncated is True
+    assert result.evidence_used == 5
+    assert "[1] abcde" in generator.calls[0][1]["content"]
 
 
 def test_loader_is_not_called_until_predict():

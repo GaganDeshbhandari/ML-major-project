@@ -103,6 +103,17 @@ def test_defaults_when_config_file_is_empty(tmp_path):
     assert config.load_in_4bit is True
     assert config.max_new_tokens == 16
     assert config.do_sample is False
+    assert config.max_evidence_tokens == 1024
+    assert config.evidence_chars_per_token == 4.0
+
+
+def test_repository_config_is_valid():
+    config = ml.load_config(env={})
+
+    assert config.base_model == ml.DEFAULT_BASE_MODEL
+    assert config.adapter_path == Path(ml.DEFAULT_ADAPTER_PATH)
+    assert config.max_evidence_tokens == 1024
+    assert config.evidence_chars_per_token == 4.0
 
 
 def test_json_values_are_loaded(tmp_path):
@@ -114,7 +125,9 @@ def test_json_values_are_loaded(tmp_path):
           "adapter_path": "some/adapter",
           "load_in_4bit": false,
           "max_new_tokens": 8,
-          "temperature": 0.2
+          "temperature": 0.2,
+          "max_evidence_tokens": 256,
+          "evidence_chars_per_token": 3.5
         }
         """,
         encoding="utf-8",
@@ -127,6 +140,8 @@ def test_json_values_are_loaded(tmp_path):
     assert config.load_in_4bit is False
     assert config.max_new_tokens == 8
     assert config.temperature == 0.2
+    assert config.max_evidence_tokens == 256
+    assert config.evidence_chars_per_token == 3.5
 
 
 def test_environment_overrides_file(tmp_path):
@@ -141,6 +156,8 @@ def test_environment_overrides_file(tmp_path):
             "FACTLLAMA_LOAD_IN_4BIT": "false",
             "FACTLLAMA_MAX_NEW_TOKENS": "32",
             "FACTLLAMA_TEMPERATURE": "0.5",
+            "FACTLLAMA_MAX_EVIDENCE_TOKENS": "512",
+            "FACTLLAMA_EVIDENCE_CHARS_PER_TOKEN": "3.0",
         },
     )
 
@@ -149,6 +166,8 @@ def test_environment_overrides_file(tmp_path):
     assert config.load_in_4bit is False
     assert config.max_new_tokens == 32
     assert config.temperature == 0.5
+    assert config.max_evidence_tokens == 512
+    assert config.evidence_chars_per_token == 3.0
 
 
 def test_blank_environment_values_are_ignored(tmp_path):
@@ -200,6 +219,8 @@ def test_unknown_key_is_an_error(tmp_path):
         {"FACTLLAMA_MAX_NEW_TOKENS": "many"},
         {"FACTLLAMA_TEMPERATURE": "-1"},
         {"FACTLLAMA_BNB_4BIT_QUANT_TYPE": "int4"},
+        {"FACTLLAMA_MAX_EVIDENCE_TOKENS": "0"},
+        {"FACTLLAMA_EVIDENCE_CHARS_PER_TOKEN": "0"},
     ],
 )
 def test_invalid_values_are_errors(tmp_path, env):

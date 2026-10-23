@@ -79,6 +79,8 @@ _CONFIG_ENV_OVERRIDES = {
     "max_new_tokens": "FACTLLAMA_MAX_NEW_TOKENS",
     "do_sample": "FACTLLAMA_DO_SAMPLE",
     "temperature": "FACTLLAMA_TEMPERATURE",
+    "max_evidence_tokens": "FACTLLAMA_MAX_EVIDENCE_TOKENS",
+    "evidence_chars_per_token": "FACTLLAMA_EVIDENCE_CHARS_PER_TOKEN",
 }
 
 _ALLOWED_CONFIG_KEYS = frozenset(_CONFIG_ENV_OVERRIDES)
@@ -143,6 +145,8 @@ class FactLLaMAConfig:
 
     ``adapter_path`` may be absolute, project-relative or contain ``~``.
     Relative paths are resolved against :func:`project_root` at load time.
+    ``max_evidence_tokens`` and ``evidence_chars_per_token`` size the
+    approximate evidence budget used by the predictor.
     """
 
     base_model: str = DEFAULT_BASE_MODEL
@@ -156,6 +160,8 @@ class FactLLaMAConfig:
     max_new_tokens: int = 16
     do_sample: bool = False
     temperature: float = 0.0
+    max_evidence_tokens: int = 1024
+    evidence_chars_per_token: float = 4.0
 
 
 @dataclass(frozen=True)
@@ -317,6 +323,19 @@ def _build_config(
     if temperature < 0:
         raise ConfigurationError("temperature must be >= 0")
 
+    max_evidence_tokens = _as_int(
+        merged.get("max_evidence_tokens", 1024), "max_evidence_tokens"
+    )
+    if max_evidence_tokens < 1:
+        raise ConfigurationError("max_evidence_tokens must be >= 1")
+
+    evidence_chars_per_token = _as_float(
+        merged.get("evidence_chars_per_token", 4.0),
+        "evidence_chars_per_token",
+    )
+    if evidence_chars_per_token <= 0:
+        raise ConfigurationError("evidence_chars_per_token must be > 0")
+
     return FactLLaMAConfig(
         base_model=base_model,
         adapter_path=Path(adapter_path),
@@ -337,6 +356,8 @@ def _build_config(
         max_new_tokens=max_new_tokens,
         do_sample=_as_bool(merged.get("do_sample", False), "do_sample"),
         temperature=temperature,
+        max_evidence_tokens=max_evidence_tokens,
+        evidence_chars_per_token=evidence_chars_per_token,
     )
 
 

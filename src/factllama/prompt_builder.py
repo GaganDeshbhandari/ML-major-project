@@ -1,61 +1,168 @@
-"""Prompt construction for FactLLaMA verification.
+"""Prompt construction and evidence budgeting for FactLLaMA verification.
 
-The prompt mirrors the format used for fine-tuning:
+The prompt mirrors the fine-tuning input:
 
-* a system instruction that requires evidence-based verification, forbids
-  outside knowledge, and asks for exactly one of ``true``, ``half`` or
-  ``false``;
-* a user message containing the claim, a numbered evidence list and the
-  ``Verdict:`` marker that cues the model's answer.
+* a system instruction that asks for evidence-only verification and exactly
+  one of ``true``, ``half`` or ``false``;
+* a user message with ``Claim: <claim>``, a numbered evidence list using
+  ``[1]``, ``[2]``, ... and a final ``Verdict:`` marker.
 
-Nothing here imports a model, a tokenizer or any ML dependency, so the
-module is safe to import in unit tests and lightweight callers.
+Nothing here imports a model, tokenizer or ML dependency, so the module is
+safe to import in unit tests and lightweight callers.
 
-Evidence can be passed as plain strings or as retrieval records (mappings
-with a ``content``/``text``/``evidence`` field). The text itself is never
-rewritten; only surrounding whitespace is trimmed.
+Evidence can be plain strings or retrieval records (mappings with a
+``content``/``text``/``evidence`` field). Only that text field is sent to the
+model; titles, URLs and other source metadata are ignored. Evidence order is
+preserved. A configurable :class:`EvidenceBudget` prevents unbounded evidence
+from entering the prompt; the budget is estimated from characters, not from a
+tokenizer, so it is deliberately conservative and approximate.
+
+The claim itself is never truncated; only its surrounding whitespace is
+trimmed. Truncation/exclusion is reported by :class:`EvidenceSelection`, which
+:func:`build_prompt` exposes alongside the messages.
 """
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
 from typing import Any
 
 __all__ = [
+    "DEFAULT_CHARS_PER_TOKEN",
+    "DEFAULT_EVIDENCE_BUDGET",
+    "DEFAULT_MAX_EVIDENCE_TOKENS",
+    "DEFAULT_MIN_TRUNCATE_TOKENS",
     "SYSTEM_PROMPT",
-    "PromptBuildError",
     "VERDICT_LABELS",
+    "BuiltPrompt",
+    "EvidenceBudget",
+    "EvidenceSelection",
+    "PromptBuildError",
     "build_messages",
+    "build_prompt",
     "build_user_prompt",
     "normalise_evidence",
     "render_chat_fallback",
+    "select_evidence",
+    "truncate_to_budget",
 ]
 
 #: Labels the model is allowed to produce. Order is intentional.
 VERDICT_LABELS = ("true", "half", "false")
 
-#: System instruction used for every verification request.
+#: Exact system instruction used during fine-tuning (notebook cells 8 and 10).
 SYSTEM_PROMPT = (
-    "You are a fact-verification assistant. Decide whether the claim is "
-    "supported by the evidence supplied by the user.\n"
-    "Rules:\n"
-    "- Use only the evidence in the user message. Do not use outside "
-    "knowledge, memory, or assumptions.\n"
-    "- Answer true when the evidence fully supports the claim.\n"
-    "- Answer half when the evidence only partially supports the claim or "
-    "the evidence is mixed.\n"
-    "- Answer false when the evidence contradicts the claim or does not "
-    "support it.\n"
-    "- Respond with exactly one of these three words: true, half, false.\n"
-    "- Do not explain, quote the evidence, or add any other text."
+    "You are a fact-checking assistant. Evaluate the claim using "
+    "only the provided evidence. Output exactly one verdict: "
+    "true, half, or false."
 )
+
+#: Default evidence budget, in approximate tokens.
+DEFAULT_MAX_EVIDENCE_TOKENS = 1024
+
+#: Conservative character-to-token estimate (English text is usually 3-4).
+DEFAULT_CHARS_PER_TOKEN = 4.0
+
+#: Do not truncate a passage to fewer than this many approximate tokens.
+DEFAULT_MIN_TRUNCATE_TOKENS = 32
 
 #: Field names accepted from retrieval-style evidence records.
 _EVIDENCE_TEXT_KEYS = ("content", "text", "evidence")
 
 
 class PromptBuildError(ValueError):
-    """Raised when a claim or evidence list cannot be turned into a prompt."""
+    """Raised when a claim, evidence list or budget is invalid."""
+
+
+@dataclass(frozen=True)
+class EvidenceBudget:
+    """Approximate token budget for evidence text.
+
+    Args:
+        max_tokens: Maximum estimated tokens across all evidence passages.
+        chars_per_token: Characters per token used for the estimate. Four is
+            conservative for English but is not tokenizer-exact.
+        min_truncate_tokens: A passage that does not fit is only truncated
+            when at least this many estimated tokens remain; otherwise it and
+            all following passages are excluded. The value is capped at
+            ``max_tokens`` so small budgets remain usable. Keeping this above
+            zero avoids sending tiny, meaningless fragments.
+
+    The estimate is intentionally approximate because the prompt builder is
+    tokenizer-free. Callers that need exact counts can size the budget
+    conservatively.
+    """
+
+    max_tokens: int = DEFAULT_MAX_EVIDENCE_TOKENS
+    chars_per_token: float = DEFAULT_CHARS_PER_TOKEN
+    min_truncate_tokens: int = DEFAULT_MIN_TRUNCATE_TOKENS
+
+    def __post_init__(self) -> None:
+        if (
+            isinstance(self.max_tokens, bool)
+            or not isinstance(self.max_tokens, int)
+            or self.max_tokens < 1
+        ):
+            raise PromptBuildError(
+                "EvidenceBudget.max_tokens must be an integer >= 1"
+            )
+        if (
+            isinstance(self.chars_per_token, bool)
+            or not isinstance(self.chars_per_token, (int, float))
+            or self.chars_per_token <= 0
+        ):
+            raise PromptBuildError(
+                "EvidenceBudget.chars_per_token must be a number > 0"
+            )
+        if (
+            isinstance(self.min_truncate_tokens, bool)
+            or not isinstance(self.min_truncate_tokens, int)
+            or self.min_truncate_tokens < 0
+        ):
+            raise PromptBuildError(
+                "EvidenceBudget.min_truncate_tokens must be an integer >= 0"
+            )
+
+    def estimate_tokens(self, text: str) -> int:
+        """Return a conservative token estimate for ``text``."""
+        if not text:
+            return 0
+        return max(1, math.ceil(len(text) / self.chars_per_token))
+
+
+#: Budget used when the caller does not provide one.
+DEFAULT_EVIDENCE_BUDGET = EvidenceBudget()
+
+
+@dataclass(frozen=True)
+class EvidenceSelection:
+    """Evidence after applying a budget, plus explicit budget metadata."""
+
+    texts: tuple[str, ...]
+    total_items: int
+    estimated_tokens: int
+    truncated: bool
+    excluded: int
+
+    @property
+    def included(self) -> int:
+        """Number of passages included in the prompt."""
+        return len(self.texts)
+
+    @property
+    def budget_exhausted(self) -> bool:
+        """Whether at least one passage was truncated or excluded."""
+        return self.truncated or self.excluded > 0
+
+
+@dataclass(frozen=True)
+class BuiltPrompt:
+    """Chat messages plus the evidence-selection metadata."""
+
+    messages: tuple[dict[str, str], ...]
+    selection: EvidenceSelection
 
 
 def _validate_claim(claim: Any) -> str:
@@ -97,8 +204,10 @@ def _evidence_text(item: Any) -> str:
 def normalise_evidence(evidence: Any) -> list[str]:
     """Validate and normalise evidence into a list of non-empty strings.
 
-    A single string is rejected on purpose: callers must pass a sequence so
-    that one evidence item does not silently become five characters.
+    Only the evidence text is kept; source metadata such as ``title`` or
+    ``url`` is never added to the prompt. A single string is rejected on
+    purpose: callers must pass a sequence so one item does not silently
+    become a sequence of characters.
     """
     if isinstance(evidence, (str, bytes)):
         raise PromptBuildError(
@@ -116,29 +225,156 @@ def normalise_evidence(evidence: Any) -> list[str]:
     return items
 
 
-def build_user_prompt(claim: str, evidence: Any) -> str:
-    """Build the user message for one verification request.
+def truncate_to_budget(
+    text: str,
+    max_tokens: int,
+    chars_per_token: float = DEFAULT_CHARS_PER_TOKEN,
+) -> str:
+    """Truncate ``text`` to at most ``max_tokens`` estimated tokens.
 
-    The output contains the claim, numbered evidence text and a trailing
-    ``Verdict:`` marker, matching the fine-tuning input layout.
+    The cut is moved back to a word/line boundary when one exists in the
+    second half of the allowed span, so passages are not normally cut in the
+    middle of a word. No ellipsis is added: the evidence text is not modified
+    beyond shortening, and truncation is reported separately.
     """
-    claim_text = _validate_claim(claim)
-    evidence_items = normalise_evidence(evidence)
+    if max_tokens < 1:
+        raise PromptBuildError("max_tokens must be >= 1")
+    if chars_per_token <= 0:
+        raise PromptBuildError("chars_per_token must be > 0")
+    if not text:
+        return ""
 
-    lines = ["Claim:", claim_text, "", "Evidence:"]
+    max_chars = int(max_tokens * chars_per_token)
+    if max_chars < 1:
+        return ""
+    if len(text) <= max_chars:
+        return text
+
+    cut = text[:max_chars]
+    boundary = max(cut.rfind(" "), cut.rfind("\n"), cut.rfind("\t"))
+    if boundary >= max(1, max_chars // 2):
+        cut = cut[:boundary]
+    return cut.rstrip()
+
+
+def select_evidence(
+    evidence: Any,
+    *,
+    budget: EvidenceBudget | None = None,
+) -> EvidenceSelection:
+    """Select evidence in order under an approximate token budget.
+
+    Behaviour:
+        * Passages are considered in their original order.
+        * A passage is included whole when it fits the remaining budget.
+        * The first passage that does not fit is truncated to the remaining
+          budget when at least ``min_truncate_tokens`` remains; later
+          passages are then excluded because the budget is exhausted.
+        * Otherwise that passage and all following passages are excluded.
+        * The claim is not part of this budget and is never truncated.
+
+    The returned :class:`EvidenceSelection` makes every truncation/exclusion
+    explicit through ``truncated``, ``excluded`` and ``estimated_tokens``.
+    """
+    active_budget = DEFAULT_EVIDENCE_BUDGET if budget is None else budget
+    if not isinstance(active_budget, EvidenceBudget):
+        raise PromptBuildError("budget must be an EvidenceBudget instance")
+
+    items = normalise_evidence(evidence)
+    selected: list[str] = []
+    used_tokens = 0
+    truncated = False
+    excluded = 0
+    minimum_truncate = min(
+        active_budget.min_truncate_tokens, active_budget.max_tokens
+    )
+
+    for offset, text in enumerate(items):
+        cost = active_budget.estimate_tokens(text)
+        remaining = active_budget.max_tokens - used_tokens
+
+        if cost <= remaining:
+            selected.append(text)
+            used_tokens += cost
+            continue
+
+        if remaining >= minimum_truncate:
+            shortened = truncate_to_budget(
+                text, remaining, active_budget.chars_per_token
+            )
+            shortened_cost = active_budget.estimate_tokens(shortened)
+            if shortened and shortened_cost <= remaining:
+                selected.append(shortened)
+                used_tokens += shortened_cost
+                truncated = True
+                excluded += len(items) - offset - 1
+            else:
+                excluded += len(items) - offset
+        else:
+            excluded += len(items) - offset
+        break
+
+    return EvidenceSelection(
+        texts=tuple(selected),
+        total_items=len(items),
+        estimated_tokens=used_tokens,
+        truncated=truncated,
+        excluded=excluded,
+    )
+
+
+def _format_user_prompt(claim: str, evidence_texts: Sequence[str]) -> str:
+    lines = [f"Claim: {claim}", "", "Evidence:"]
     lines.extend(
-        f"{index}. {text}" for index, text in enumerate(evidence_items, start=1)
+        f"[{index}] {text}"
+        for index, text in enumerate(evidence_texts, start=1)
     )
     lines.extend(["", "Verdict:"])
     return "\n".join(lines)
 
 
-def build_messages(claim: str, evidence: Any) -> list[dict[str, str]]:
-    """Return chat messages for ``tokenizer.apply_chat_template``."""
-    return [
+def build_prompt(
+    claim: str,
+    evidence: Any,
+    *,
+    budget: EvidenceBudget | None = None,
+) -> BuiltPrompt:
+    """Build chat messages and return the evidence-selection metadata."""
+    claim_text = _validate_claim(claim)
+    selection = select_evidence(evidence, budget=budget)
+    messages = (
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": build_user_prompt(claim, evidence)},
-    ]
+        {
+            "role": "user",
+            "content": _format_user_prompt(claim_text, selection.texts),
+        },
+    )
+    return BuiltPrompt(messages=messages, selection=selection)
+
+
+def build_user_prompt(
+    claim: str,
+    evidence: Any,
+    *,
+    budget: EvidenceBudget | None = None,
+) -> str:
+    """Build the user message for one verification request.
+
+    The format is ``Claim: <claim>``, a blank line, ``Evidence:``, numbered
+    ``[n] <text>`` lines, a blank line and ``Verdict:``. Use
+    :func:`build_prompt` when truncation/exclusion metadata is needed.
+    """
+    return build_prompt(claim, evidence, budget=budget).messages[1]["content"]
+
+
+def build_messages(
+    claim: str,
+    evidence: Any,
+    *,
+    budget: EvidenceBudget | None = None,
+) -> list[dict[str, str]]:
+    """Return chat messages for ``tokenizer.apply_chat_template``."""
+    return list(build_prompt(claim, evidence, budget=budget).messages)
 
 
 def render_chat_fallback(messages: Sequence[Mapping[str, str]]) -> str:

@@ -23,6 +23,7 @@ models/**
 
 # Weight and checkpoint formats anywhere in the repo
 *.safetensors
+*.safetensors.index.json
 *.ckpt
 *.pt
 *.pth

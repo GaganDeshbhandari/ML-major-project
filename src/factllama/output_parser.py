@@ -3,12 +3,14 @@
 The model is instructed to answer with exactly one of ``true``, ``half`` or
 ``false``. Real generations are sometimes less tidy (surrounding text,
 capitalisation, markdown fences, a ``Verdict:`` prefix), so the parser
-extracts the first label found rather than requiring an exact match.
+tolerates those forms.
 
-Parsing never guesses: when no supported label is present,
-:func:`parse_verdict` raises :class:`VerdictParseError` and
-:func:`try_parse_verdict` returns ``None``. The raw model output is always
-preserved by the caller.
+The parser is deliberately conservative: exactly one distinct label must be
+present. Explanations containing multiple conflicting labels (for example
+``Verdict: true or false``) are rejected instead of picking the first one.
+When parsing fails, :func:`parse_verdict` raises :class:`VerdictParseError`
+and :func:`try_parse_verdict` returns ``None``. The raw output is always kept
+by the caller.
 """
 
 from __future__ import annotations
@@ -31,7 +33,7 @@ _CODE_FENCE_END = re.compile(r"\s*```$")
 
 
 class VerdictParseError(ValueError):
-    """Raised when generated text contains no supported verdict label."""
+    """Raised when generated text has no unambiguous supported verdict."""
 
 
 def _strip_code_fences(text: str) -> str:
@@ -45,13 +47,19 @@ def _strip_code_fences(text: str) -> str:
 def parse_verdict(text: str) -> str:
     """Return ``"true"``, ``"half"`` or ``"false"`` from generated text.
 
-    The search is limited to the text after the last ``Verdict:`` marker when
-    one is present, which avoids picking a label out of the model's
-    explanation. Matching is case-insensitive and word-bounded, so
-    ``truthful`` or ``falsehood`` are not treated as labels.
+    Rules:
+        * Case and surrounding whitespace are ignored.
+        * A ``Verdict:`` marker limits the search to the text after it, so a
+          label mentioned in an explanation before it is ignored. Multiple
+          markers are rejected as ambiguous.
+        * Labels must appear as whole words; ``truthful`` and ``falsehood``
+          do not count.
+        * If zero labels are found, or more than one distinct label is found,
+          parsing fails. Conflicting labels are never resolved by position.
 
     Raises:
-        VerdictParseError: the text is empty or contains no supported label.
+        VerdictParseError: the text is empty, has no label after the marker,
+            has no label at all, or contains conflicting labels.
     """
     if not isinstance(text, str):
         raise VerdictParseError(
@@ -63,16 +71,36 @@ def parse_verdict(text: str) -> str:
         raise VerdictParseError("model output is empty")
 
     markers = list(_VERDICT_MARKER_PATTERN.finditer(cleaned))
+    if len(markers) > 1:
+        raise VerdictParseError(
+            "model output contains multiple 'Verdict:' markers and is ambiguous"
+        )
     if markers:
         cleaned = cleaned[markers[-1].end():]
+        if not cleaned.strip():
+            raise VerdictParseError(
+                "model output has a 'Verdict:' marker but no label after it"
+            )
 
-    match = _LABEL_PATTERN.search(cleaned)
-    if match is None:
+    labels = [
+        match.group(1).lower()
+        for match in _LABEL_PATTERN.finditer(cleaned)
+    ]
+    if not labels:
         preview = text.strip().replace("\n", " ")[:120]
         raise VerdictParseError(
             f"no verdict label (true, half, false) in model output: {preview!r}"
         )
-    return match.group(1).lower()
+
+    distinct = sorted(set(labels))
+    if len(distinct) > 1:
+        preview = text.strip().replace("\n", " ")[:120]
+        raise VerdictParseError(
+            "conflicting verdict labels "
+            f"({', '.join(distinct)}) in model output: {preview!r}"
+        )
+
+    return labels[0]
 
 
 def try_parse_verdict(text: str) -> str | None:

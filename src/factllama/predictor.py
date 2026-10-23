@@ -28,7 +28,12 @@ from .model_loader import (
     MissingDependencyError,
 )
 from .output_parser import try_parse_verdict
-from .prompt_builder import build_messages, render_chat_fallback
+from .prompt_builder import (
+    DEFAULT_EVIDENCE_BUDGET,
+    EvidenceBudget,
+    build_prompt,
+    render_chat_fallback,
+)
 
 __all__ = [
     "FactLLaMAPredictor",
@@ -48,12 +53,17 @@ class Prediction:
     """One verification result.
 
     ``verdict`` is ``None`` when the model output could not be parsed; the
-    raw generation is always kept for inspection.
+    raw generation is always kept for inspection. ``evidence_used`` is the
+    approximate evidence-token count, not a passage count; the other budget
+    fields report whether the prompt was reduced before generation.
     """
 
     claim: str
     verdict: str | None
     raw_output: str
+    evidence_used: int = 0
+    evidence_excluded: int = 0
+    evidence_truncated: bool = False
 
 
 class TextGenerator(Protocol):
@@ -173,6 +183,9 @@ class FactLLaMAPredictor:
         config: Explicit configuration used only when creating the default
             loader.
         generator: Injected text generator; skips model loading entirely.
+        evidence_budget: Optional evidence budget override. When omitted, the
+            loader/config values are used, falling back to
+            :data:`~src.factllama.prompt_builder.DEFAULT_EVIDENCE_BUDGET`.
 
     Raises:
         ValueError: both ``loader`` and ``config`` were supplied, which is
@@ -185,6 +198,7 @@ class FactLLaMAPredictor:
         *,
         config: FactLLaMAConfig | None = None,
         generator: TextGenerator | None = None,
+        evidence_budget: EvidenceBudget | None = None,
     ) -> None:
         if loader is not None and config is not None:
             raise ValueError(
@@ -193,6 +207,23 @@ class FactLLaMAPredictor:
         self._loader = loader
         self._config = config
         self._generator = generator
+        self._evidence_budget = evidence_budget
+
+    def _resolve_evidence_budget(self) -> EvidenceBudget:
+        """Use the explicit budget, then config values, then the default."""
+        if self._evidence_budget is not None:
+            return self._evidence_budget
+
+        config = self._config
+        if config is None and self._loader is not None:
+            config = getattr(self._loader, "config", None)
+
+        if isinstance(config, FactLLaMAConfig):
+            return EvidenceBudget(
+                max_tokens=config.max_evidence_tokens,
+                chars_per_token=config.evidence_chars_per_token,
+            )
+        return DEFAULT_EVIDENCE_BUDGET
 
     def _ensure_generator(self) -> TextGenerator:
         if self._generator is None:
@@ -214,14 +245,22 @@ class FactLLaMAPredictor:
         Prompt/input errors raise
         :class:`~src.factllama.prompt_builder.PromptBuildError`. Model output
         that contains no supported verdict yields ``Prediction.verdict is
-        None`` rather than an exception.
+        None`` rather than an exception. Truncation/exclusion of evidence is
+        reported on the returned prediction.
         """
-        messages = build_messages(claim, evidence)
-        raw_output = self._ensure_generator().generate(messages)
+        built = build_prompt(
+            claim,
+            evidence,
+            budget=self._resolve_evidence_budget(),
+        )
+        raw_output = self._ensure_generator().generate(built.messages)
         return Prediction(
             claim=claim.strip(),
             verdict=try_parse_verdict(raw_output),
             raw_output=raw_output,
+            evidence_used=built.selection.estimated_tokens,
+            evidence_excluded=built.selection.excluded,
+            evidence_truncated=built.selection.truncated,
         )
 
     def predict_batch(

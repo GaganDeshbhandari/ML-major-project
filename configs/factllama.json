@@ -9,5 +9,7 @@
   "trust_remote_code": false,
   "max_new_tokens": 16,
   "do_sample": false,
-  "temperature": 0.0
+  "temperature": 0.0,
+  "max_evidence_tokens": 1024,
+  "evidence_chars_per_token": 4.0
 }
