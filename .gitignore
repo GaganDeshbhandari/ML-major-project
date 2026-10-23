@@ -14,3 +14,33 @@ __pycache__
 
 *.pyc
 
+# --- FactLLaMA / local model artifacts (never commit) ---
+
+# Local adapters, weights and checkpoints under models/
+models/**
+!models/**/
+!models/**/.gitkeep
+
+# Weight and checkpoint formats anywhere in the repo
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.gguf
+*.onnx
+adapter_config.json
+adapter_model.*
+
+# Training outputs and experiment tracking
+checkpoints/
+outputs/
+runs/
+wandb/
+
+# Credentials and local overrides
+.env
+.env.*
+!.env.example
+configs/*.local.json
+
