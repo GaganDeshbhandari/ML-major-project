@@ -1,8 +1,84 @@
-venv
+# Virtual environments
+venv/
+venv312/
+.venv/
+env/
 
-.opencode
-
+# Local tooling and agent state
+.opencode/
 AGENTS.md
+graphify-out/
 
-graphify-out
+# Secrets and local environment overrides
+.env
+.env.*
+!.env.example
 
+# Python bytecode, test and build caches
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Model weights, adapters and training checkpoints
+models/**
+!models/**/
+!models/.gitkeep
+!models/**/.gitkeep
+*.safetensors
+*.safetensors.index.json
+*.ckpt
+*.pt
+*.pth
+*.pth.tar
+*.bin
+*.gguf
+*.onnx
+*.h5
+*.hdf5
+*.msgpack
+*.pkl
+*.npy
+*.npz
+*.joblib
+adapter_config.json
+adapter_model.*
+checkpoints/
+outputs/
+runs/
+wandb/
+
+# Local data and logs
+*.log
+*.tmp
+*.sqlite3
+*.db
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/external/*
+!data/external/.gitkeep
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# JavaScript dependencies and notebook checkpoints
+node_modules/
+.ipynb_checkpoints/
+
+# Machine-specific configuration overrides
+configs/*.local.json
