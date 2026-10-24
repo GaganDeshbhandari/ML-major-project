@@ -2,6 +2,7 @@
 venv/
 venv312/
 .venv/
+.venv-*/
 env/
 
 # Local tooling and agent state
@@ -12,7 +13,7 @@ graphify-out/
 # Secrets and local environment overrides
 .env
 .env.*
-!.env.example
+.env.example
 .envrc
 .direnv/
 *.pem
