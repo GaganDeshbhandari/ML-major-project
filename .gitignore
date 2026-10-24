@@ -1,4 +1,7 @@
 venv
+venv312
+
+__pycache__/
 
 .opencode
 
@@ -6,4 +9,11 @@ AGENTS.md
 
 graphify-out
 
+models/**
+
 .env
+.env.example
+
+.pytest_cache/
+
+.ruff_cache/
