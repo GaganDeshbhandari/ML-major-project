@@ -113,10 +113,12 @@ def test_public_api_runs_against_real_artifacts(store: ArtifactStore) -> None:
     o1_results = prioritize_claims(claims, ratings, "O1", artifact_store=store)
     o2_results = prioritize_claims(claims, ratings, "O2", artifact_store=store)
 
-    assert all(result.predicted_truth == "False" for result in o1_results)
-    assert all(result.predicted_tpb == "High" for result in o2_results)
-    assert [result.rank for result in o1_results] == list(range(1, len(o1_results) + 1))
-    assert [result.rank for result in o2_results] == list(range(1, len(o2_results) + 1))
+    assert len(o1_results) == len(claims)
+    assert len(o2_results) == len(claims)
+    assert all(result.predicted_truth in {"True", "False"} for result in o1_results)
+    assert all(result.predicted_tpb in {"High", "Low"} for result in o2_results)
+    assert [result.rank for result in o1_results] == list(range(1, len(claims) + 1))
+    assert [result.rank for result in o2_results] == list(range(1, len(claims) + 1))
 
 
 def test_real_o3_orders_known_variances(store: ArtifactStore) -> None:

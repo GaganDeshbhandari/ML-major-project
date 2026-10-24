@@ -53,16 +53,36 @@ class RuleModel:
         self,
         rule: Callable[[np.ndarray], str],
         classes: tuple[str, ...],
+        probability_rule: Callable[[np.ndarray], tuple[float, ...]] | None = None,
     ) -> None:
         self._rule = rule
+        self._probability_rule = probability_rule
         self.classes_ = np.asarray(classes, dtype=object)
         self.n_features_in_ = len(FEATURE_COLUMNS)
         self.predict_calls: list[np.ndarray] = []
+        self.predict_proba_calls: list[np.ndarray] = []
 
     def predict(self, X: object) -> np.ndarray:
         values = np.asarray(X, dtype=np.float64)
         self.predict_calls.append(values.copy())
         return np.asarray([self._rule(row) for row in values], dtype=object)
+
+    def predict_proba(self, X: object) -> np.ndarray:
+        values = np.asarray(X, dtype=np.float64)
+        self.predict_proba_calls.append(values.copy())
+        if self._probability_rule is not None:
+            return np.asarray([self._probability_rule(row) for row in values])
+
+        return np.asarray(
+            [
+                [
+                    0.9 if label == predicted else 0.1
+                    for label in self.classes_
+                ]
+                for predicted in (self._rule(row) for row in values)
+            ],
+            dtype=np.float64,
+        )
 
 
 class WrongCountModel:
@@ -130,11 +150,18 @@ def _three_claim_ratings() -> list[UserRating]:
     ]
 
 
-def test_o1_filters_false_and_preserves_input_order() -> None:
+def test_o1_returns_all_claims_sorted_by_false_probability() -> None:
     scaler = IdentityScaler()
     model = RuleModel(
         lambda row: "False" if row[0] < 0.2 else "True",
-        ("False", "True"),
+        ("True", "False"),
+        lambda row: (
+            (0.8, 0.2)
+            if row[0] > 0.5
+            else (0.1, 0.9)
+            if row[0] < 0
+            else (0.3, 0.7)
+        ),
     )
     store = FakeStore(scaler, o1_model=model)
 
@@ -142,10 +169,10 @@ def test_o1_filters_false_and_preserves_input_order() -> None:
         _three_claims(), _three_claim_ratings(), "O1", artifact_store=store
     )
 
-    assert [result.claim_id for result in results] == ["b", "c"]
-    assert [result.rank for result in results] == [1, 2]
+    assert [result.claim_id for result in results] == ["b", "c", "a"]
+    assert [result.rank for result in results] == [1, 2, 3]
     assert all(result.objective is Objective.O1 for result in results)
-    assert all(result.predicted_truth == "False" for result in results)
+    assert [result.predicted_truth for result in results] == ["False", "False", "True"]
     assert all(result.predicted_tpb is None for result in results)
     assert all(result.disputability is None for result in results)
     assert store.o1_accesses == 1
@@ -169,11 +196,16 @@ def test_o1_passes_features_in_expected_order_to_scaler() -> None:
     assert scaler.transform_calls[0].shape == (3, 4)
 
 
-def test_o2_filters_high_and_preserves_input_order() -> None:
+def test_o2_returns_all_claims_sorted_by_high_probability() -> None:
     scaler = IdentityScaler()
     model = RuleModel(
         lambda row: "High" if row[2] > 0.2 else "Low",
-        ("High", "Low"),
+        ("Low", "High"),
+        lambda row: (
+            (0.2, 0.8)
+            if row[2] > 0.2
+            else (0.7, 0.3)
+        ),
     )
     store = FakeStore(scaler, o2_model=model)
     ratings = [
@@ -187,12 +219,12 @@ def test_o2_filters_high_and_preserves_input_order() -> None:
 
     results = prioritize_claims(_three_claims(), ratings, "O2", artifact_store=store)
 
-    assert [result.claim_id for result in results] == ["b"]
-    assert results[0].rank == 1
-    assert results[0].objective is Objective.O2
-    assert results[0].predicted_tpb == "High"
-    assert results[0].predicted_truth is None
-    assert results[0].disputability is None
+    assert [result.claim_id for result in results] == ["b", "a", "c"]
+    assert [result.rank for result in results] == [1, 2, 3]
+    assert all(result.objective is Objective.O2 for result in results)
+    assert [result.predicted_tpb for result in results] == ["High", "Low", "Low"]
+    assert all(result.predicted_truth is None for result in results)
+    assert all(result.disputability is None for result in results)
     assert store.o2_accesses == 1
     assert store.o1_accesses == 0
     assert store.scaler_accesses == 1
@@ -265,9 +297,10 @@ def test_shuffled_ratings_associate_by_claim_id() -> None:
 
     results = prioritize_claims(claims, ratings, "O1", artifact_store=store)
 
-    # Claims order is c, a, b. c (0.0) and b (-1.0) are False; a (1.0) is True.
-    assert [result.claim_id for result in results] == ["c", "b"]
-    assert [result.claim for result in results] == ["C", "B"]
+    # c and b are predicted False with equal scores, so their input order is
+    # preserved; a is predicted True and has the lower False probability.
+    assert [result.claim_id for result in results] == ["c", "b", "a"]
+    assert [result.claim for result in results] == ["C", "B", "A"]
 
 
 def test_empty_claims_return_empty_without_loading_artifacts() -> None:

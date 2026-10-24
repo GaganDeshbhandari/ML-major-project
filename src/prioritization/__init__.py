@@ -2,8 +2,8 @@
 
 Phase 1 implements the three notebook objectives:
 
-* O1: predict and return claims likely to be ``False``.
-* O2: predict and return claims with ``High`` total perception bias.
+* O1: rank all claims by predicted probability of being ``False``.
+* O2: rank all claims by predicted probability of ``High`` total perception bias.
 * O3: rank claims by descending PTL sample variance (disputability).
 
 Predictions are model outputs, not verified facts.

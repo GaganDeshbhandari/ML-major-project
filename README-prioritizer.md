@@ -13,17 +13,18 @@ Level)** values, and claims are ranked according to one selected objective.
 
 | Objective | Model/metric | Returned claims |
 |---|---|---|
-| **O1 — Removing False News** | `random_forest_model_o1.pkl` predicts `True`/`False` | Only claims predicted as `False`, in input claim order |
-| **O2 — Correcting Misperceptions** | `random_forest_model.pkl` predicts `High`/`Low` TPB | Only claims predicted as `High`, in input claim order |
+| **O1 — Removing False News** | `random_forest_model_o1.pkl` predicts `True`/`False` | All claims, sorted by descending probability of `False` |
+| **O2 — Correcting Misperceptions** | `random_forest_model.pkl` predicts `High`/`Low` TPB | All claims, sorted by descending probability of `High` |
 | **O3 — Decreasing Disagreement** | Sample variance of PTL (`ddof=1`) | All rated claims, sorted by descending `disputability` |
 
 > Model predictions are classifier outputs, **not verified facts**. This
 > feature does not fact-check claims. A successful unit-test run is not an
 > accuracy evaluation.
 
-O1 and O2 use the saved classifier's prediction directly. No confidence
-thresholds, probability-based sorting, or incoming-data TPB median thresholds
-are used. O3 does not load a model or scaler.
+O1 and O2 use the saved classifier's prediction and `predict_proba()` output.
+They return every claim and rank claims by the probability of the
+objective-specific target class. Ties preserve input order. O3 does not load a
+model or scaler.
 
 ## Feature extraction
 

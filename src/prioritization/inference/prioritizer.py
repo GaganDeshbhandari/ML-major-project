@@ -78,21 +78,23 @@ def _transform_features(scaler: object, features: np.ndarray) -> np.ndarray:
     return scaled
 
 
-def _predict_labels(
+def _predict_labels_and_scores(
     store: ArtifactStore,
     objective: Objective,
     features: np.ndarray,
-) -> list[str]:
+) -> tuple[list[str], np.ndarray]:
     scaled = _transform_features(store.scaler, features)
 
     if objective is Objective.O1:
         model = store.o1_model
         allowed = O1_CLASSES
         model_name = "O1"
+        prioritized_label = "False"
     else:
         model = store.o2_model
         allowed = O2_CLASSES
         model_name = "O2"
+        prioritized_label = "High"
 
     try:
         raw_predictions = model.predict(scaled)
@@ -115,7 +117,53 @@ def _predict_labels(
             f"{invalid}. Expected labels from {sorted(allowed)}."
         )
 
-    return labels
+    predict_proba = getattr(model, "predict_proba", None)
+    if not callable(predict_proba):
+        raise InferenceError(
+            f"The saved {model_name} model does not support predict_proba(); "
+            "confidence-ranked prioritization cannot be performed."
+        )
+
+    try:
+        raw_probabilities = predict_proba(scaled)
+        probabilities = np.asarray(raw_probabilities, dtype=np.float64)
+    except Exception as exc:
+        raise InferenceError(
+            f"The saved {model_name} model could not produce probability "
+            "predictions."
+        ) from exc
+
+    classes = getattr(model, "classes_", None)
+    if classes is None:
+        raise InferenceError(
+            f"The saved {model_name} model does not expose classes_; "
+            "the target probability column cannot be identified."
+        )
+    class_labels = [str(label) for label in np.asarray(classes).reshape(-1)]
+    if prioritized_label not in class_labels:
+        raise InferenceError(
+            f"The saved {model_name} model does not expose the required "
+            f"{prioritized_label!r} probability class."
+        )
+    target_column = class_labels.index(prioritized_label)
+
+    expected_shape = (features.shape[0], len(class_labels))
+    if probabilities.shape != expected_shape:
+        raise InferenceError(
+            f"The saved {model_name} model returned probabilities with shape "
+            f"{probabilities.shape}; expected {expected_shape}."
+        )
+    if not np.all(np.isfinite(probabilities)):
+        raise InferenceError(
+            f"The saved {model_name} model returned non-finite probabilities."
+        )
+    if np.any((probabilities < 0.0) | (probabilities > 1.0)):
+        raise InferenceError(
+            f"The saved {model_name} model returned values outside the "
+            "[0, 1] probability range."
+        )
+
+    return labels, probabilities[:, target_column]
 
 
 def _prioritize_supervised(
@@ -124,21 +172,19 @@ def _prioritize_supervised(
     store: ArtifactStore,
 ) -> list[PrioritizedClaim]:
     features = _feature_matrix(prepared)
-    labels = _predict_labels(store, objective, features)
+    labels, scores = _predict_labels_and_scores(store, objective, features)
+    ranked = list(zip(prepared.claims, labels, scores, strict=True))
+    ranked.sort(key=lambda item: -item[2])
 
-    prioritized_label = "False" if objective is Objective.O1 else "High"
     results: list[PrioritizedClaim] = []
 
-    for claim, label in zip(prepared.claims, labels, strict=True):
-        if label != prioritized_label:
-            continue
-
+    for rank, (claim, label, _) in enumerate(ranked, start=1):
         results.append(
             PrioritizedClaim(
                 claim_id=claim.claim_id,
                 claim=claim.claim,
                 objective=objective,
-                rank=len(results) + 1,
+                rank=rank,
                 predicted_truth=(
                     cast(TruthLabel, label) if objective is Objective.O1 else None
                 ),
@@ -193,10 +239,11 @@ def prioritize_claims(
 ) -> list[PrioritizedClaim]:
     """Rank claims according to one bias-aware objective.
 
-    ``O1`` returns only claims predicted as ``False``, in input claim order.
-    ``O2`` returns only claims predicted as ``High`` TPB, in input claim
-    order. ``O3`` returns every rated claim sorted by descending sample
-    variance of PTL, with undefined variance (one rating) last.
+    ``O1`` returns every claim sorted by descending predicted probability of
+    ``False``. ``O2`` returns every claim sorted by descending predicted
+    probability of ``High`` TPB. ``O3`` returns every rated claim sorted by
+    descending sample variance of PTL, with undefined variance (one rating)
+    last.
 
     Model predictions are classifier outputs, not verified facts. The
     function does not calculate GTL or TPB for incoming claims.
