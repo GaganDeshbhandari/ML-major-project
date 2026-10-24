@@ -10,3 +10,8 @@ scikit-learn>=1.6.1,<2
 
 # Test dependency
 pytest>=8,<10
+
+# Evidence retrieval and reranking
+python-dotenv>=1.0,<2
+tavily-python>=0.8,<1
+sentence-transformers>=2.7,<6
