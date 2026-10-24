@@ -7,6 +7,9 @@ AGENTS.md
 graphify-out
 
 .env
+.env.example
+
+models/*
 
 venv312
 
