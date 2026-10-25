@@ -2,6 +2,7 @@
 venv/
 venv312/
 .venv/
+.venv-*/
 env/
 
 # Local tooling and agent state
@@ -12,21 +13,45 @@ graphify-out/
 # Secrets and local environment overrides
 .env
 .env.*
-!.env.example
+.env.example
+.envrc
+.direnv/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.token
+credentials*.json
+secrets*.json
+secrets.toml
+.streamlit/secrets.toml
+.aws/
+.azure/
+.gcp/
+.kaggle/
 
 # Python bytecode, test and build caches
 __pycache__/
 *.py[cod]
 *.pyo
+*.prof
+*.pstats
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .hypothesis/
+.tox/
+.nox/
+.cache/
+.ipython/
+.jupyter/
 .coverage
 .coverage.*
 coverage.xml
 htmlcov/
 *.egg-info/
+pip-wheel-metadata/
 build/
 dist/
 
@@ -38,12 +63,16 @@ models/**
 *.safetensors
 *.safetensors.index.json
 *.ckpt
+*.ckpt.index
+*.ckpt-*
 *.pt
 *.pth
 *.pth.tar
 *.bin
 *.gguf
 *.onnx
+*.onnx_data
+*.tflite
 *.h5
 *.hdf5
 *.msgpack
@@ -58,11 +87,28 @@ outputs/
 runs/
 wandb/
 
-# Local data and logs
+# Local data, archives and logs
 *.log
 *.tmp
+*.sqlite
 *.sqlite3
 *.db
+*.parquet
+*.arrow
+*.feather
+*.orc
+*.avro
+*.zip
+*.tar
+*.tgz
+*.gz
+*.7z
+*.rar
+data/*
+!data/.gitkeep
+!data/raw/
+!data/processed/
+!data/external/
 data/raw/*
 !data/raw/.gitkeep
 data/processed/*
@@ -75,9 +121,27 @@ data/external/*
 .idea/
 .DS_Store
 Thumbs.db
+desktop.ini
+*.code-workspace
 
-# JavaScript dependencies and notebook checkpoints
+# Temporary editor and patch files
+*.bak
+*.orig
+*.rej
+*.swp
+*~
+
+# JavaScript dependencies, framework caches and notebook checkpoints
 node_modules/
+.next/
+.nuxt/
+.svelte-kit/
+.parcel-cache/
+.turbo/
+.vercel/
+out/
+storybook-static/
+*.tsbuildinfo
 .ipynb_checkpoints/
 
 # Machine-specific configuration overrides
