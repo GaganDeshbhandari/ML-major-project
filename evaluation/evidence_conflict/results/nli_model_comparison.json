@@ -1,0 +1,943 @@
+{
+  "comparison_schema_version": "1.0",
+  "confusion": {
+    "alternative": {
+      "confusions": [
+        {
+          "count": 4,
+          "gold_label": "not_enough_info",
+          "predicted_label": "supports"
+        },
+        {
+          "count": 3,
+          "gold_label": "supports",
+          "predicted_label": "not_enough_info"
+        },
+        {
+          "count": 3,
+          "gold_label": "not_enough_info",
+          "predicted_label": "refutes"
+        },
+        {
+          "count": 1,
+          "gold_label": "refutes",
+          "predicted_label": "not_enough_info"
+        }
+      ],
+      "labels": [
+        "supports",
+        "refutes",
+        "not_enough_info"
+      ],
+      "matrix": [
+        [
+          27,
+          0,
+          3
+        ],
+        [
+          0,
+          29,
+          1
+        ],
+        [
+          4,
+          3,
+          23
+        ]
+      ]
+    },
+    "baseline": {
+      "confusions": [
+        {
+          "count": 4,
+          "gold_label": "not_enough_info",
+          "predicted_label": "supports"
+        },
+        {
+          "count": 4,
+          "gold_label": "not_enough_info",
+          "predicted_label": "refutes"
+        },
+        {
+          "count": 3,
+          "gold_label": "refutes",
+          "predicted_label": "supports"
+        },
+        {
+          "count": 1,
+          "gold_label": "supports",
+          "predicted_label": "not_enough_info"
+        }
+      ],
+      "labels": [
+        "supports",
+        "refutes",
+        "not_enough_info"
+      ],
+      "matrix": [
+        [
+          29,
+          0,
+          1
+        ],
+        [
+          3,
+          27,
+          0
+        ],
+        [
+          4,
+          4,
+          22
+        ]
+      ]
+    }
+  },
+  "confusion_counts": {
+    "alternative": {
+      "nei_to_refutes": 3,
+      "nei_to_supports": 4,
+      "refutes_to_supports": 0,
+      "supports_to_nei": 3
+    },
+    "baseline": {
+      "nei_to_refutes": 4,
+      "nei_to_supports": 4,
+      "refutes_to_supports": 3,
+      "supports_to_nei": 1
+    }
+  },
+  "dataset": {
+    "alternative_report_dataset_path": "C:\\Users\\Gagan\\OneDrive\\Desktop\\MLProject\\ML-major-project\\evaluation\\evidence_conflict\\data\\nli_stance_benchmark_v1.json",
+    "baseline_report_dataset_path": "C:\\Users\\Gagan\\OneDrive\\Desktop\\MLProject\\ML-major-project\\evaluation\\evidence_conflict\\data\\nli_stance_benchmark_v1.json",
+    "class_counts": {
+      "not_enough_info": 30,
+      "refutes": 30,
+      "supports": 30
+    },
+    "sha256": "198b783ab6d457515bde8924e3c9f4ea1f227f2a686fcdb42fc19dd285b32178",
+    "total_examples": 90
+  },
+  "error_transitions": {
+    "alternative_high_confidence_error_count": 6,
+    "alternative_misclassified_count": 11,
+    "baseline_high_confidence_error_count": 7,
+    "baseline_misclassified_count": 12,
+    "common_error_ids": [
+      "NEI-002",
+      "NEI-007",
+      "NEI-009",
+      "NEI-013",
+      "NEI-024",
+      "REF-022",
+      "SUP-010"
+    ],
+    "fixed_by_alternative_ids": [
+      "NEI-016",
+      "NEI-017",
+      "NEI-021",
+      "REF-006",
+      "REF-019"
+    ],
+    "new_error_ids_in_alternative": [
+      "NEI-006",
+      "NEI-025",
+      "SUP-014",
+      "SUP-026"
+    ]
+  },
+  "generated_at_utc": "2026-10-26T05:53:24.840322+00:00",
+  "headline_metrics": [
+    {
+      "alternative": 0.8777777777777778,
+      "baseline": 0.8666666666666667,
+      "delta_alternative_minus_baseline": 0.011111111111111072,
+      "metric": "Accuracy",
+      "unit": null
+    },
+    {
+      "alternative": 0.8759157721555785,
+      "baseline": 0.8647408198908354,
+      "delta_alternative_minus_baseline": 0.011174952264743077,
+      "metric": "Macro-F1",
+      "unit": null
+    },
+    {
+      "alternative": 0.9,
+      "baseline": 0.9666666666666667,
+      "delta_alternative_minus_baseline": -0.06666666666666665,
+      "metric": "SUPPORTS recall",
+      "unit": null
+    },
+    {
+      "alternative": 0.9666666666666667,
+      "baseline": 0.9,
+      "delta_alternative_minus_baseline": 0.06666666666666665,
+      "metric": "REFUTES recall",
+      "unit": null
+    },
+    {
+      "alternative": 0.7666666666666667,
+      "baseline": 0.7333333333333333,
+      "delta_alternative_minus_baseline": 0.03333333333333344,
+      "metric": "NOT_ENOUGH_INFO recall",
+      "unit": null
+    },
+    {
+      "alternative": 0,
+      "baseline": 0,
+      "delta_alternative_minus_baseline": 0,
+      "metric": "Inference failures",
+      "unit": null
+    },
+    {
+      "alternative": 1.0,
+      "baseline": 1.0,
+      "delta_alternative_minus_baseline": 0.0,
+      "metric": "Coverage",
+      "unit": null
+    },
+    {
+      "alternative": 90,
+      "baseline": 90,
+      "delta_alternative_minus_baseline": 0,
+      "metric": "Evaluated examples",
+      "unit": null
+    },
+    {
+      "alternative": 2.5263948393213886,
+      "baseline": 0.17302930112431097,
+      "delta_alternative_minus_baseline": 2.3533655381970777,
+      "metric": "Average warm inference seconds/example",
+      "unit": "seconds"
+    },
+    {
+      "alternative": 39.75387550005689,
+      "baseline": 37.84163499996066,
+      "delta_alternative_minus_baseline": 1.9122405000962317,
+      "metric": "Initial loading seconds",
+      "unit": "seconds"
+    },
+    {
+      "alternative": 264.6030161996605,
+      "baseline": 53.24124280002434,
+      "delta_alternative_minus_baseline": 211.36177339963615,
+      "metric": "Total attempt seconds",
+      "unit": "seconds"
+    },
+    {
+      "alternative": 871.8,
+      "baseline": 871.32,
+      "delta_alternative_minus_baseline": 0.4799999999999045,
+      "metric": "Peak working set MB",
+      "unit": "MB"
+    }
+  ],
+  "inference_failures": {
+    "alternative": [],
+    "baseline": []
+  },
+  "measurement_notes": [
+    "All classification metrics and timings are read from the benchmark JSON reports; they are not recomputed here.",
+    "Peak memory is the process peak working set measured with Windows GetProcessMemoryInfo. It includes the Python process, imported libraries, tokenizer, model, and inference workspace; it is not isolated model-weight memory.",
+    "The dataset is the frozen 90-example diagnostic set. Results are not a representative benchmark or proof of general reliability.",
+    "With 90 examples, one example changes accuracy by about 1.11 percentage points; small differences are not statistically robust.",
+    "No confidence threshold was configured for either model.",
+    "Model dtypes differ: baseline=torch.float32, alternative=torch.float16. The existing classifier loaded each checkpoint's configured dtype; CPU runtime comparisons may be affected by dtype-specific kernels.",
+    "The baseline metrics reproduce the prior nli_stance_benchmark.json exactly; the fresh baseline run was used to add process peak-memory and dtype metadata under the same runner.",
+    "Supplementary model-weight sizes from safetensors metadata (parameters only, not peak memory): xsmall 270.2 MiB (F32), base 351.8 MiB (F16); the base checkpoint weights are about 81.6 MiB larger."
+  ],
+  "misclassified_examples": {
+    "alternative": [
+      {
+        "abstained": false,
+        "category": "direct_support",
+        "claim": "The Pacific Ocean is the largest ocean on Earth.",
+        "confidence": 0.9741248000925011,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "The Pacific covers more area than any other ocean.",
+        "evidence_index": 0,
+        "gold_label": "supports",
+        "id": "SUP-010",
+        "inference_seconds": 2.6118226000107825,
+        "predicted_label": "not_enough_info",
+        "probabilities": {
+          "not_enough_info": 0.9741248000925011,
+          "refutes": 0.0008796543805300521,
+          "supports": 0.024995545526968782
+        },
+        "rationale": "Covering more area than every other ocean is the claim's meaning.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "direct_support",
+        "claim": "Antarctica is the coldest continent.",
+        "confidence": 0.9683908920855577,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Antarctica has lower average temperatures than any other continent.",
+        "evidence_index": 0,
+        "gold_label": "supports",
+        "id": "SUP-014",
+        "inference_seconds": 2.5377541999332607,
+        "predicted_label": "not_enough_info",
+        "probabilities": {
+          "not_enough_info": 0.9683908920855577,
+          "refutes": 0.0021224879138830818,
+          "supports": 0.029486620000559207
+        },
+        "rationale": "Having the lowest average temperature is what being coldest means.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "numerical",
+        "claim": "Jupiter is the largest planet in the Solar System.",
+        "confidence": 0.9654214380093111,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Jupiter has a greater mass and volume than any other planet orbiting the Sun.",
+        "evidence_index": 0,
+        "gold_label": "supports",
+        "id": "SUP-026",
+        "inference_seconds": 2.8665552999591455,
+        "predicted_label": "not_enough_info",
+        "probabilities": {
+          "not_enough_info": 0.9654214380093111,
+          "refutes": 0.0009352995789939295,
+          "supports": 0.03364326241169493
+        },
+        "rationale": "Greater mass and volume than every other planet supports being the largest.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "numerical",
+        "claim": "A common year has 366 days.",
+        "confidence": 0.5079110447696901,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "A non-leap year contains 365 days.",
+        "evidence_index": 0,
+        "gold_label": "refutes",
+        "id": "REF-022",
+        "inference_seconds": 2.5668070999672636,
+        "predicted_label": "not_enough_info",
+        "probabilities": {
+          "not_enough_info": 0.5079110447696901,
+          "refutes": 0.03724483787829957,
+          "supports": 0.4548441173520104
+        },
+        "rationale": "A common year is a non-leap year, so 366 days contradicts the evidence.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Pure water freezes at 0 degrees Celsius at standard pressure.",
+        "confidence": 0.9971870577543964,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Pure water boils at 100 degrees Celsius at standard pressure.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-002",
+        "inference_seconds": 2.5765473999781534,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.0025752690084999705,
+          "refutes": 0.9971870577543964,
+          "supports": 0.00023767323710370108
+        },
+        "rationale": "The boiling point does not state or contradict the freezing point.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "The human heart pumps blood.",
+        "confidence": 0.8941039665086159,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "The human heart is about the size of a fist.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-006",
+        "inference_seconds": 2.58573640009854,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.10420999015646935,
+          "refutes": 0.0016860433349146964,
+          "supports": 0.8941039665086159
+        },
+        "rationale": "Heart size does not state or contradict its pumping function.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "overlapping_vocabulary",
+        "claim": "Two plus two equals four.",
+        "confidence": 0.9864013749749737,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Two multiplied by two equals four.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-007",
+        "inference_seconds": 2.318329899921082,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.012563328021188815,
+          "refutes": 0.0010352970038375298,
+          "supports": 0.9864013749749737
+        },
+        "rationale": "The evidence uses multiplication, not addition; the shared result does not entail the addition claim.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Tokyo is in Japan.",
+        "confidence": 0.7835185727258915,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Tokyo is one of the world's most populous metropolitan areas.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-009",
+        "inference_seconds": 2.4612868999829516,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.21253512447117676,
+          "refutes": 0.003946302802931652,
+          "supports": 0.7835185727258915
+        },
+        "rationale": "Population does not establish Tokyo's country.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "One hour contains 60 minutes.",
+        "confidence": 0.6104488248131532,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "One day contains 24 hours.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-013",
+        "inference_seconds": 2.3987691000802442,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.13620954404297966,
+          "refutes": 0.6104488248131532,
+          "supports": 0.25334163114386704
+        },
+        "rationale": "The number of hours in a day does not state the number of minutes in an hour.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Ice is the solid form of water.",
+        "confidence": 0.9774372926736075,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Ice floats on liquid water.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-024",
+        "inference_seconds": 2.3511208000127226,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.01614190223114086,
+          "refutes": 0.9774372926736075,
+          "supports": 0.006420805095251767
+        },
+        "rationale": "Floating does not state or contradict that ice is water's solid form.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Abraham Lincoln was a U.S. president.",
+        "confidence": 0.6725297693404935,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Abraham Lincoln was assassinated in 1865.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-025",
+        "inference_seconds": 2.5501248000655323,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.3201721683404558,
+          "refutes": 0.00729806231905073,
+          "supports": 0.6725297693404935
+        },
+        "rationale": "The assassination date does not state or contradict his presidency.",
+        "truncated": false
+      }
+    ],
+    "baseline": [
+      {
+        "abstained": false,
+        "category": "direct_support",
+        "claim": "The Pacific Ocean is the largest ocean on Earth.",
+        "confidence": 0.9845791995723516,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "The Pacific covers more area than any other ocean.",
+        "evidence_index": 0,
+        "gold_label": "supports",
+        "id": "SUP-010",
+        "inference_seconds": 0.17243010003585368,
+        "predicted_label": "not_enough_info",
+        "probabilities": {
+          "not_enough_info": 0.9845791995723516,
+          "refutes": 0.0004045478940713678,
+          "supports": 0.015016252533577084
+        },
+        "rationale": "Covering more area than every other ocean is the claim's meaning.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "direct_contradiction",
+        "claim": "Earth is the center of the Solar System.",
+        "confidence": 0.6965130252136666,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Earth orbits the Sun, which is at the center of the Solar System.",
+        "evidence_index": 0,
+        "gold_label": "refutes",
+        "id": "REF-006",
+        "inference_seconds": 0.16146329999901354,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.17817356443921611,
+          "refutes": 0.1253134103471172,
+          "supports": 0.6965130252136666
+        },
+        "rationale": "Earth orbiting the Sun contradicts Earth being the center.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "date",
+        "claim": "Christopher Columbus reached the Americas in 1493.",
+        "confidence": 0.49798685136153337,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Columbus's first voyage to the Americas arrived in 1492.",
+        "evidence_index": 0,
+        "gold_label": "refutes",
+        "id": "REF-019",
+        "inference_seconds": 0.15538800007198006,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.3535998567640851,
+          "refutes": 0.14841329187438146,
+          "supports": 0.49798685136153337
+        },
+        "rationale": "The evidence gives a different year for the same voyage.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "numerical",
+        "claim": "A common year has 366 days.",
+        "confidence": 0.9633719024725671,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "A non-leap year contains 365 days.",
+        "evidence_index": 0,
+        "gold_label": "refutes",
+        "id": "REF-022",
+        "inference_seconds": 0.18985760002397,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.029453829732058987,
+          "refutes": 0.007174267795373949,
+          "supports": 0.9633719024725671
+        },
+        "rationale": "A common year is a non-leap year, so 366 days contradicts the evidence.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Pure water freezes at 0 degrees Celsius at standard pressure.",
+        "confidence": 0.9996174625577814,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Pure water boils at 100 degrees Celsius at standard pressure.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-002",
+        "inference_seconds": 0.16357550001703203,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.00032163460691596475,
+          "refutes": 0.9996174625577814,
+          "supports": 6.0902835302623376e-05
+        },
+        "rationale": "The boiling point does not state or contradict the freezing point.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "overlapping_vocabulary",
+        "claim": "Two plus two equals four.",
+        "confidence": 0.9784338815395457,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Two multiplied by two equals four.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-007",
+        "inference_seconds": 0.14802660001441836,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.016398826297663947,
+          "refutes": 0.005167292162790304,
+          "supports": 0.9784338815395457
+        },
+        "rationale": "The evidence uses multiplication, not addition; the shared result does not entail the addition claim.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Tokyo is in Japan.",
+        "confidence": 0.9320609467412345,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Tokyo is one of the world's most populous metropolitan areas.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-009",
+        "inference_seconds": 0.17415070009883493,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.0671101437839227,
+          "refutes": 0.0008289094748427266,
+          "supports": 0.9320609467412345
+        },
+        "rationale": "Population does not establish Tokyo's country.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "One hour contains 60 minutes.",
+        "confidence": 0.40163342300993443,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "One day contains 24 hours.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-013",
+        "inference_seconds": 0.16281509993132204,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.24872569849116283,
+          "refutes": 0.40163342300993443,
+          "supports": 0.34964087849890274
+        },
+        "rationale": "The number of hours in a day does not state the number of minutes in an hour.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Mammals are warm-blooded animals.",
+        "confidence": 0.7974512938933204,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Mammals nurse their young with milk.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-016",
+        "inference_seconds": 0.1804304999532178,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.19864889307689096,
+          "refutes": 0.003899813029788761,
+          "supports": 0.7974512938933204
+        },
+        "rationale": "Nursing young is a mammalian trait but does not establish warm-bloodedness.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Berlin is the capital of Germany.",
+        "confidence": 0.8017541355544304,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Berlin is the largest city in Germany by population.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-017",
+        "inference_seconds": 0.23701769998297095,
+        "predicted_label": "supports",
+        "probabilities": {
+          "not_enough_info": 0.19736485166727974,
+          "refutes": 0.0008810127782899046,
+          "supports": 0.8017541355544304
+        },
+        "rationale": "Being the largest city does not establish capital status.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "overlapping_vocabulary",
+        "claim": "A common year has 365 days.",
+        "confidence": 0.9766267831902671,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "A leap year has 366 days.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-021",
+        "inference_seconds": 0.18755809997674078,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.009074588537133308,
+          "refutes": 0.9766267831902671,
+          "supports": 0.014298628272599603
+        },
+        "rationale": "The evidence describes leap years, not common years.",
+        "truncated": false
+      },
+      {
+        "abstained": false,
+        "category": "related_non_decisive",
+        "claim": "Ice is the solid form of water.",
+        "confidence": 0.9943810000500249,
+        "correct": false,
+        "error_message": null,
+        "error_type": null,
+        "evidence": "Ice floats on liquid water.",
+        "evidence_index": 0,
+        "gold_label": "not_enough_info",
+        "id": "NEI-024",
+        "inference_seconds": 0.15330729994457215,
+        "predicted_label": "refutes",
+        "probabilities": {
+          "not_enough_info": 0.003246336182962477,
+          "refutes": 0.9943810000500249,
+          "supports": 0.0023726637670126727
+        },
+        "rationale": "Floating does not state or contradict that ice is water's solid form.",
+        "truncated": false
+      }
+    ]
+  },
+  "models": {
+    "alternative": {
+      "label": "Alternative base",
+      "model": {
+        "batch_size": 2,
+        "batch_size_note": "The benchmark calls predict once per example with one evidence passage, so the effective batch size is 1; the configured batch size only caps batching.",
+        "confidence_threshold": null,
+        "configured_revision": "6f5cf0a2b59cabb106aca4c287eed12e357e90eb",
+        "device_requested": "auto",
+        "effective_batch_size": 1,
+        "evidence_passages_per_call": 1,
+        "local_files_only": true,
+        "max_evidence_chars": 2000,
+        "model_class": "DebertaV2ForSequenceClassification",
+        "model_dtype": "torch.float16",
+        "name": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+        "resolved_device": "cpu",
+        "resolved_revision": null,
+        "resolved_revision_note": "The current classifier API does not expose the resolved Hugging Face revision.",
+        "sequence_length": 512,
+        "tokenizer_class": "DebertaV2Tokenizer"
+      }
+    },
+    "baseline": {
+      "label": "Existing xsmall",
+      "model": {
+        "batch_size": 2,
+        "batch_size_note": "The benchmark calls predict once per example with one evidence passage, so the effective batch size is 1; the configured batch size only caps batching.",
+        "confidence_threshold": null,
+        "configured_revision": "a150876415327c80daeff35ca6f68f5ed8cf5c24",
+        "device_requested": "auto",
+        "effective_batch_size": 1,
+        "evidence_passages_per_call": 1,
+        "local_files_only": true,
+        "max_evidence_chars": 2000,
+        "model_class": "DebertaV2ForSequenceClassification",
+        "model_dtype": "torch.float32",
+        "name": "cross-encoder/nli-deberta-v3-xsmall",
+        "resolved_device": "cpu",
+        "resolved_revision": null,
+        "resolved_revision_note": "The current classifier API does not expose the resolved Hugging Face revision.",
+        "sequence_length": 512,
+        "tokenizer_class": "DebertaV2Tokenizer"
+      }
+    }
+  },
+  "per_class": {
+    "alternative": [
+      {
+        "correct": 27,
+        "f1": 0.8852459016393442,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "supports",
+        "precision": 0.8709677419354839,
+        "recall": 0.9,
+        "recall_including_failures": 0.9,
+        "support": 30
+      },
+      {
+        "correct": 29,
+        "f1": 0.9354838709677419,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "refutes",
+        "precision": 0.90625,
+        "recall": 0.9666666666666667,
+        "recall_including_failures": 0.9666666666666667,
+        "support": 30
+      },
+      {
+        "correct": 23,
+        "f1": 0.8070175438596491,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "not_enough_info",
+        "precision": 0.8518518518518519,
+        "recall": 0.7666666666666667,
+        "recall_including_failures": 0.7666666666666667,
+        "support": 30
+      }
+    ],
+    "baseline": [
+      {
+        "correct": 29,
+        "f1": 0.8787878787878788,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "supports",
+        "precision": 0.8055555555555556,
+        "recall": 0.9666666666666667,
+        "recall_including_failures": 0.9666666666666667,
+        "support": 30
+      },
+      {
+        "correct": 27,
+        "f1": 0.8852459016393442,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "refutes",
+        "precision": 0.8709677419354839,
+        "recall": 0.9,
+        "recall_including_failures": 0.9,
+        "support": 30
+      },
+      {
+        "correct": 22,
+        "f1": 0.8301886792452831,
+        "gold_total": 30,
+        "inference_failures": 0,
+        "label": "not_enough_info",
+        "precision": 0.9565217391304348,
+        "recall": 0.7333333333333333,
+        "recall_including_failures": 0.7333333333333333,
+        "support": 30
+      }
+    ]
+  },
+  "per_class_f1": {
+    "alternative": {
+      "not_enough_info": 0.8070175438596491,
+      "refutes": 0.9354838709677419,
+      "supports": 0.8852459016393442
+    },
+    "baseline": {
+      "not_enough_info": 0.8301886792452831,
+      "refutes": 0.8852459016393442,
+      "supports": 0.8787878787878788
+    },
+    "delta_alternative_minus_baseline": {
+      "not_enough_info": -0.02317113538563398,
+      "refutes": 0.050237969328397636,
+      "supports": 0.006458022851465461
+    }
+  },
+  "per_class_precision": {
+    "alternative": {
+      "not_enough_info": 0.8518518518518519,
+      "refutes": 0.90625,
+      "supports": 0.8709677419354839
+    },
+    "baseline": {
+      "not_enough_info": 0.9565217391304348,
+      "refutes": 0.8709677419354839,
+      "supports": 0.8055555555555556
+    }
+  },
+  "provenance": {
+    "alternative_report": "evaluation\\evidence_conflict\\results\\nli_stance_benchmark_deberta_v3_base.json",
+    "baseline_note": "The baseline metrics reproduce the prior nli_stance_benchmark.json exactly; the fresh baseline run was used to add process peak-memory and dtype metadata under the same runner.",
+    "baseline_report": "evaluation\\evidence_conflict\\results\\nli_stance_benchmark_xsmall_remeasured.json"
+  },
+  "run_counts": {
+    "alternative": {
+      "coverage": 1.0,
+      "evaluated_examples": 90,
+      "inference_failures": 0,
+      "total_examples": 90
+    },
+    "baseline": {
+      "coverage": 1.0,
+      "evaluated_examples": 90,
+      "inference_failures": 0,
+      "total_examples": 90
+    }
+  },
+  "summary": {
+    "accuracy_delta": 0.011111111111111072,
+    "assessment": "Marginal headline improvement; the gain is not concentrated in NOT_ENOUGH_INFO recall, and warm inference is more than 5x slower. On this evidence, the alternative does not justify replacing the production default.",
+    "improvement_concentrated_in_not_enough_info_recall": "no",
+    "macro_f1_delta": 0.011174952264743077,
+    "not_enough_info_f1_delta": -0.02317113538563398,
+    "not_enough_info_recall_delta": 0.03333333333333344,
+    "peak_memory_delta_mb": 0.4799999999999045,
+    "refutes_f1_delta": 0.050237969328397636,
+    "supports_f1_delta": 0.006458022851465461,
+    "total_runtime_ratio_alternative_over_baseline": 4.969888047007414,
+    "verdict": "alternative",
+    "warm_runtime_ratio_alternative_over_baseline": 14.600965402422382
+  }
+}

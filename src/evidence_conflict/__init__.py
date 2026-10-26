@@ -1,9 +1,10 @@
-"""Typed contracts and configuration for evidence conflict scoring.
+"""Typed contracts, configuration, and pure ECS aggregation.
 
-This package currently provides schemas, configuration, and errors only. NLI
-model loading, stance inference, ECS calculation, and pipeline integration are
-intentionally left to later phases. Importing this package does not import
-PyTorch or Transformers, download models, or load weights.
+The package provides the public schemas, configuration, and errors used by the
+evidence-conflict modules. NLI model loading and stance inference live in
+``nli_classifier``; pure ECS aggregation lives in ``scoring``. The pipeline
+integrates both behind an opt-in configuration. Importing this package does
+not import PyTorch or Transformers, download models, or load weights.
 """
 
 from .config import DEFAULT_NLI_MODEL, ECSConfig
