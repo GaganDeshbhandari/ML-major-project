@@ -146,6 +146,10 @@ def build_pending_report(
             for objective in OBJECTIVES
         },
         "exclusions": [],
+        "missing_data": [
+            "No manually labeled claim-ranking dataset.",
+            "No baseline rankings recorded for a real claim set.",
+        ],
         "annotation_required": True,
         "nli_benchmark_used_as_claim_ranking_benchmark": False,
         "reason": reason,
@@ -191,6 +195,12 @@ def build_baseline_report(
         "dataset_summary": summary,
         "baseline_metrics": baseline["objectives"],
         "exclusions": baseline["dataset_exclusions"],
+        "missing_data": {
+            "missing_ecs_count": summary["missing_ecs_count"],
+            "missing_baseline_rank_counts": summary[
+                "missing_baseline_rank_counts"
+            ],
+        },
         "annotation_required": False,
         "nli_benchmark_used_as_claim_ranking_benchmark": False,
         "generated_at": generated_at or _now_utc(),
@@ -244,6 +254,19 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                 "## Why metrics are pending",
                 "",
                 str(report.get("reason", "")),
+                "",
+                "## Missing data",
+                "",
+            ]
+        )
+        missing_data = report.get("missing_data", [])
+        if isinstance(missing_data, list) and missing_data:
+            for item in missing_data:
+                lines.append(f"- {item}")
+        else:
+            lines.append("- None recorded.")
+        lines.extend(
+            [
                 "",
                 "## Baseline metrics",
                 "",
@@ -299,6 +322,35 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             f"| Dataset path | `{report.get('dataset_path')}` |",
             f"| Dataset SHA-256 | `{report.get('dataset_sha256')}` |",
             f"| Claims evaluated | {report.get('num_claims_evaluated')} |",
+            "",
+            "## Missing data",
+            "",
+        ]
+    )
+
+    missing_data = report.get("missing_data", {})
+    if isinstance(missing_data, Mapping):
+        lines.append(
+            "- Claims with missing ECS: "
+            f"{missing_data.get('missing_ecs_count', 'n/a')}"
+        )
+        missing_ranks = missing_data.get(
+            "missing_baseline_rank_counts",
+            {},
+        )
+        if isinstance(missing_ranks, Mapping):
+            for objective in OBJECTIVES:
+                lines.append(
+                    f"- Missing baseline ranks for {objective}: "
+                    f"{missing_ranks.get(objective, 'n/a')}"
+                )
+        else:
+            lines.append("- Missing baseline ranks: n/a")
+    else:
+        lines.append("- None recorded.")
+
+    lines.extend(
+        [
             "",
             "## Baseline metrics",
             "",
