@@ -1,0 +1,48 @@
+{
+  "annotation_required": true,
+  "baseline_metrics": {
+    "O1": null,
+    "O2": null,
+    "O3": null
+  },
+  "baseline_rankings_available": false,
+  "dataset_id": "claim-ranking-eval",
+  "dataset_path": null,
+  "dataset_schema_version": "1.0",
+  "dataset_sha256": null,
+  "dataset_version": "1",
+  "exclusions": [],
+  "expected_dataset_path": "evaluation/claim_ranking/data/claim_ranking_dataset_v1.json",
+  "generated_at": "2026-10-27T07:02:37.883684+00:00",
+  "k_values": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "labeling_guide_version": "1",
+  "metric_definitions": {
+    "duplicate_claims": "Duplicate claim IDs are rejected in the dataset and in ranking inputs. Each claim ID must identify exactly one claim.",
+    "exclusions": "A claim with a null baseline rank for an objective is excluded from that objective's metrics and listed with a reason. Dataset-level exclusions are recorded separately. No labels or ranks are imputed.",
+    "insufficient_evidence": "A claim may have ecs=null and/or no evidence. It is not automatically excluded from baseline metrics if it has a human priority label and a baseline rank. Future ECS methods must document their handling.",
+    "k_selection": "K values are pre-registered before inspecting results. Default K values are 1, 3, 5, and 10. A K larger than the number of labeled claims in an objective's evaluation set is reported as null rather than computed on an undersized set.",
+    "missing_ecs": "null ECS is preserved as missing and is never imputed as 0.0. Baseline metrics do not use ECS. Future ECS-sensitive methods must report how missing ECS values are ordered or excluded.",
+    "ndcg_at_k": "Discounted cumulative gain using exponential gain (2**grade - 1) and discount 1/log2(position + 1), divided by the ideal DCG over the same K and labels. Null when ideal DCG is zero or K exceeds the set size.",
+    "precision_at_k": "Number of claims with relevance_grade >= relevant_min_grade in the top K, divided by K. A K larger than the number of labeled claims in the objective's evaluation set is reported as null.",
+    "recall_at_k": "Number of claims with relevance_grade >= relevant_min_grade in the top K, divided by the total number of relevant claims in the objective's evaluation set. Null when there are no relevant claims or K exceeds the set size.",
+    "relevance_threshold": "Precision and recall use relevance_grade >= 1 as binary relevant. NDCG uses the full 0-3 grade.",
+    "ties": "A ranking is a total order. Baseline ranks are sorted by (rank, dataset order). For score-based methods, stable_rank_by_score sorts by descending score, places null last, and preserves input order for ties. The evaluation module does not reorder a supplied ranking."
+  },
+  "missing_data": [
+    "No manually labeled claim-ranking dataset.",
+    "No baseline rankings recorded for a real claim set."
+  ],
+  "nli_benchmark_used_as_claim_ranking_benchmark": false,
+  "notes": [
+    "No metric values are reported because no manually labeled claim-ranking dataset exists.",
+    "Synthetic fixtures in unit tests are not saved as evaluation results."
+  ],
+  "num_claims_evaluated": 0,
+  "reason": "No manually labeled claim-ranking dataset is present in the repository. The 90-example NLI stance benchmark is a claim-evidence stance benchmark, not a claim-level fact-checking priority benchmark, so it cannot be used to compute claim-ranking baseline metrics. Baseline metrics must wait until independent claim-level annotations are collected and frozen.",
+  "status": "pending_annotation"
+}
