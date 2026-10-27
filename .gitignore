@@ -9,6 +9,7 @@ graphify-out
 venv312
 
 .env
+.env.example
 
 __pycache__
 
@@ -42,6 +43,4 @@ wandb/
 # Credentials and local overrides
 .env
 .env.*
-!.env.example
 configs/*.local.json
-
