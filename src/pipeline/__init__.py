@@ -8,6 +8,12 @@ from .prioritization_retrieval import (
     RetrievalErrorInfo,
     prioritize_and_retrieve,
 )
+from .factllama_selection import (
+    FactLLaMAErrorInfo,
+    FactLLaMASelectionError,
+    FactLLaMASelectionService,
+    FactLLaMAVerificationResult,
+)
 from .ranking_fusion import (
     FusedPrioritizationResult,
     fuse_prioritization_results,
@@ -16,6 +22,10 @@ from .ranking_fusion import (
 __all__ = [
     "DEFAULT_RRF_K",
     "ECSErrorInfo",
+    "FactLLaMAErrorInfo",
+    "FactLLaMASelectionError",
+    "FactLLaMASelectionService",
+    "FactLLaMAVerificationResult",
     "FusedPrioritizationResult",
     "PrioritizationRetrievalResult",
     "RankingFusionError",

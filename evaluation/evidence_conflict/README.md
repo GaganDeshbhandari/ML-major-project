@@ -33,7 +33,7 @@ scored dataset.
 Run real local inference from the project root with the project environment:
 
 ```powershell
-.\venv312\Scripts\python.exe -m evaluation.evidence_conflict.benchmark `
+.\venv\Scripts\python.exe -m evaluation.evidence_conflict.benchmark `
   --batch-size 2 `
   --local-files-only
 ```
@@ -71,7 +71,7 @@ and inference workspace.
 An explicit model override can be evaluated on the same frozen dataset:
 
 ```powershell
-.\venv312\Scripts\python.exe -m evaluation.evidence_conflict.benchmark `
+.\venv\Scripts\python.exe -m evaluation.evidence_conflict.benchmark `
   --model MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli `
   --model-revision 6f5cf0a2b59cabb106aca4c287eed12e357e90eb `
   --batch-size 2 `
@@ -83,7 +83,7 @@ Compare two completed JSON reports without loading a model or recomputing
 predictions:
 
 ```powershell
-.\venv312\Scripts\python.exe -m evaluation.evidence_conflict.compare_nli_models `
+.\venv\Scripts\python.exe -m evaluation.evidence_conflict.compare_nli_models `
   --baseline evaluation/evidence_conflict/results/nli_stance_benchmark_xsmall_remeasured.json `
   --alternative evaluation/evidence_conflict/results/nli_stance_benchmark_deberta_v3_base.json `
   --baseline-label "Existing xsmall" `
@@ -119,7 +119,7 @@ the fast DeBERTa v3 tokenizer and did not require `sentencepiece`.
 ## Unit tests
 
 ```powershell
-.\venv312\Scripts\python.exe -m pytest `
+.\venv\Scripts\python.exe -m pytest `
   tests/evidence_conflict/test_nli_benchmark.py `
   tests/evidence_conflict/test_nli_model_comparison.py -q
 ```
