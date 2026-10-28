@@ -1,12 +1,3 @@
-# FactLLaMA inference dependencies (QLoRA / 4-bit).
-# Install into a CUDA-capable environment:
-#   pip install -r requirements.txt
-torch>=2.2
-transformers>=4.43
-peft>=0.11
-accelerate>=0.30
-bitsandbytes>=0.43
-
 # Runtime and test dependencies for bias-aware prioritization.
 # The model artifacts were serialized with scikit-learn 1.6.1.
 # Use a dedicated scikit-learn 1.6.1 environment for exact artifact parity.

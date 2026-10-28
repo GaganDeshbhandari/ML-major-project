@@ -118,12 +118,12 @@ Validated on 2026-10-27 with:
 - Transformers 5.19.0, PEFT 0.21.2, Accelerate 1.15.0
 - bitsandbytes 0.50.2
 
-Keep this environment separate from the shared `venv312`; do not replace the
-existing CPU-only environment.
+Use this as the single project environment; it includes the prioritization,
+retrieval, evidence-conflict, testing, and FactLLaMA dependencies.
 
 ```powershell
-py -3.12 -m venv C:\Users\Gagan\venvs\factllama
-C:\Users\Gagan\venvs\factllama\Scripts\Activate.ps1
+py -3.12 -m venv .\venv
+.\venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu130
 python -m pip install -r requirements-factllama.txt
@@ -304,7 +304,8 @@ tests are run here.
 
 ## Phase 1 validation status
 
-Validated in `C:\Users\Gagan\venvs\factllama` on 2026-10-27:
+Validated in the project-local `.\venv` on 2026-10-28 (the same pinned
+environment was previously validated externally on 2026-10-27):
 
 | Check | Result |
 | --- | --- |

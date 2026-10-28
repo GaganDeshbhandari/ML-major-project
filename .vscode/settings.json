@@ -1,8 +1,5 @@
 {
-  // venv312 (Python 3.12) has sentence-transformers/torch installed.
-  // The `venv` folder is Python 3.15 and does not have the reranker backend,
-  // which makes Pylance report "Import 'sentence_transformers' could not be resolved".
-  "python.defaultInterpreterPath": "${workspaceFolder}/venv312/Scripts/python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
   "python.terminal.activateEnvironment": true,
   "python.analysis.extraPaths": ["${workspaceFolder}"]
 }

@@ -139,7 +139,7 @@ python -m pip install --upgrade pip
 python -m pip install "scikit-learn==1.6.1" "numpy>=1.26,<3" "scipy>=1.11,<2" "joblib>=1.3,<2" "pytest>=8,<10"
 ```
 
-The existing `venv312` environment uses scikit-learn 1.9.1. Loading artifacts
+The unified `factllama` environment uses scikit-learn 1.9.1. Loading artifacts
 serialized by 1.6.1 under 1.9.1 emits `InconsistentVersionWarning`; successful
 loading and smoke predictions do not by themselves prove full cross-version
 prediction compatibility.
@@ -205,25 +205,25 @@ Run all prioritization tests (real-artifact tests run automatically when the
 local artifacts are present):
 
 ```powershell
-.\venv312\Scripts\python.exe -m pytest tests\prioritization -q
+.\venv\Scripts\python.exe -m pytest tests\prioritization -q
 ```
 
 Run only the synthetic unit tests, without the local real-artifact smoke test:
 
 ```powershell
-.\venv312\Scripts\python.exe -m pytest tests\prioritization -q --ignore=tests\prioritization\test_real_artifacts.py
+.\venv\Scripts\python.exe -m pytest tests\prioritization -q --ignore=tests\prioritization\test_real_artifacts.py
 ```
 
 Run only the real-artifact smoke test:
 
 ```powershell
-.\venv312\Scripts\python.exe -m pytest tests\prioritization\test_real_artifacts.py -q
+.\venv\Scripts\python.exe -m pytest tests\prioritization\test_real_artifacts.py -q
 ```
 
 Compile-check the package and tests:
 
 ```powershell
-.\venv312\Scripts\python.exe -m compileall -q src\prioritization tests\prioritization
+.\venv\Scripts\python.exe -m compileall -q src\prioritization tests\prioritization
 ```
 
 The real-artifact smoke test uses the actual local model files and synthetic
