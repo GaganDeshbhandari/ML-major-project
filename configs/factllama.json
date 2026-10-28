@@ -1,0 +1,15 @@
+{
+  "base_model": "meta-llama/Llama-3.2-3B-Instruct",
+  "adapter_path": "models/factllama/factllama_final_adapter_v2",
+  "load_in_4bit": true,
+  "bnb_4bit_quant_type": "nf4",
+  "bnb_4bit_compute_dtype": "bfloat16",
+  "bnb_4bit_use_double_quant": true,
+  "device_map": "auto",
+  "trust_remote_code": false,
+  "max_new_tokens": 16,
+  "do_sample": false,
+  "temperature": 0.0,
+  "max_evidence_tokens": 1024,
+  "evidence_chars_per_token": 4.0
+}

@@ -1,0 +1,2107 @@
+{
+  "evaluation": "FactLLaMA on RAWFC test split",
+  "timestamp_utc": "2026-10-28T07:45:44.037452+00:00",
+  "dataset": {
+    "path": "C:\\Users\\Gagan\\OneDrive\\Desktop\\MLProject\\ML-major-project\\data\\RAWFC\\test",
+    "file_count": 200,
+    "expected_file_count": 200,
+    "label_field": "label",
+    "evidence_field": "reports[*].content",
+    "original_label_field": "original_label"
+  },
+  "label_mapping": {
+    "true": "true",
+    "correct attribution": "true",
+    "Mostly True": "true",
+    "mixture": "half",
+    "unproven": "half",
+    "false": "false",
+    "misattributed": "false",
+    "Mostly False": "false"
+  },
+  "scoring_policy": {
+    "metrics_include": "examples with valid ground truth and a successfully parsed prediction",
+    "malformed_and_prediction_failures_excluded_from_metrics": true,
+    "unparsable_predictions_reported_separately": true
+  },
+  "counts": {
+    "total_files": 200,
+    "successfully_evaluated": 200,
+    "malformed": 0,
+    "failed": 0,
+    "invalid_or_unparsable_predictions": 0,
+    "scored": 200
+  },
+  "metrics": {
+    "accuracy": 0.615,
+    "macro_f1": 0.6072484779035581,
+    "per_class": {
+      "true": {
+        "precision": 0.5913978494623656,
+        "recall": 0.8208955223880597,
+        "f1": 0.6875,
+        "support": 67
+      },
+      "half": {
+        "precision": 0.5740740740740741,
+        "recall": 0.4626865671641791,
+        "f1": 0.512396694214876,
+        "support": 67
+      },
+      "false": {
+        "precision": 0.6981132075471698,
+        "recall": 0.5606060606060606,
+        "f1": 0.6218487394957982,
+        "support": 66
+      }
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "true",
+      "half",
+      "false"
+    ],
+    "rows_actual_columns_predicted": {
+      "true": {
+        "true": 55,
+        "half": 6,
+        "false": 6
+      },
+      "half": {
+        "true": 26,
+        "half": 31,
+        "false": 10
+      },
+      "false": {
+        "true": 12,
+        "half": 17,
+        "false": 37
+      }
+    }
+  },
+  "malformed_records": [],
+  "failed_examples": [],
+  "invalid_predictions": [],
+  "label_distribution": {
+    "half": 67,
+    "true": 67,
+    "false": 66
+  },
+  "prediction_distribution": {
+    "half": 54,
+    "false": 53,
+    "true": 93
+  },
+  "examples": [
+    {
+      "file": "101929.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "104584.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "105069.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "105478.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "107490.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1003,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "118358.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "120599.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "120604.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "126119.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1006,
+      "evidence_excluded": 24,
+      "evidence_truncated": false
+    },
+    {
+      "file": "127525.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "129828.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "131977.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1000,
+      "evidence_excluded": 23,
+      "evidence_truncated": false
+    },
+    {
+      "file": "132967.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "135372.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "142961.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "146535.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 22,
+      "evidence_truncated": false
+    },
+    {
+      "file": "149013.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "149750.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "151008.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "151264.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "151730.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 997,
+      "evidence_excluded": 20,
+      "evidence_truncated": false
+    },
+    {
+      "file": "151788.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "152448.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 24,
+      "evidence_truncated": true
+    },
+    {
+      "file": "152612.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "152865.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "153388.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 24,
+      "evidence_truncated": true
+    },
+    {
+      "file": "154457.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "154524.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 9,
+      "evidence_truncated": true
+    },
+    {
+      "file": "158615.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 7,
+      "evidence_truncated": true
+    },
+    {
+      "file": "158711.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "160739.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "161742.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "163342.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "163456.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "163913.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "165491.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 8,
+      "evidence_truncated": true
+    },
+    {
+      "file": "166269.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 25,
+      "evidence_truncated": true
+    },
+    {
+      "file": "167182.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "167697.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "167947.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "168036.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "170939.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "171353.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1012,
+      "evidence_excluded": 14,
+      "evidence_truncated": false
+    },
+    {
+      "file": "171914.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "172640.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1022,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "172816.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "172953.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "173380.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "174280.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "175243.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "176382.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "176526.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "177680.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "177951.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "179061.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "181500.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "182696.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "183244.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "183462.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "184041.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "184607.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "186590.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "189063.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "190242.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 25,
+      "evidence_truncated": true
+    },
+    {
+      "file": "190891.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "190940.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "192951.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 27,
+      "evidence_truncated": true
+    },
+    {
+      "file": "193028.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 24,
+      "evidence_truncated": true
+    },
+    {
+      "file": "193069.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "193182.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 26,
+      "evidence_truncated": true
+    },
+    {
+      "file": "194129.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "194578.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "194743.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "195391.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "195884.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 9,
+      "evidence_truncated": true
+    },
+    {
+      "file": "196397.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 9,
+      "evidence_truncated": true
+    },
+    {
+      "file": "196457.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "196786.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "198625.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "199720.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "200357.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 25,
+      "evidence_truncated": true
+    },
+    {
+      "file": "200681.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "201004.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "202055.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "202080.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "202215.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "202653.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "204512.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "205883.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "206647.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1012,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "207190.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "208065.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 25,
+      "evidence_truncated": true
+    },
+    {
+      "file": "208463.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "209423.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1000,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "211117.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "211593.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1021,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "213096.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1022,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "213582.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "213941.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "214303.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "214457.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "215293.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "216646.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 9,
+      "evidence_truncated": true
+    },
+    {
+      "file": "217144.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "217693.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "218032.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1012,
+      "evidence_excluded": 19,
+      "evidence_truncated": false
+    },
+    {
+      "file": "219823.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "220348.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "220666.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "221919.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "222334.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "222460.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "223925.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "223964.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "224218.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1008,
+      "evidence_excluded": 20,
+      "evidence_truncated": false
+    },
+    {
+      "file": "224673.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "224848.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "225865.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "226634.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "227233.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "228485.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "228810.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "228850.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "229257.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 998,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "229702.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "229739.json",
+      "label": "false",
+      "original_label": "misattributed",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "229978.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "230149.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1009,
+      "evidence_excluded": 22,
+      "evidence_truncated": false
+    },
+    {
+      "file": "230889.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "233964.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "234184.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "235366.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "237086.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1007,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "238514.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "238684.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "239650.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "239954.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 10,
+      "evidence_truncated": true
+    },
+    {
+      "file": "241565.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "242563.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "242574.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "245264.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "246059.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "246433.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "246920.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "247062.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "247366.json",
+      "label": "true",
+      "original_label": "Mostly True",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1022,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "247609.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "248211.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "248401.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "250461.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "250908.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "253173.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "253390.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "253488.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "253563.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "253719.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "254377.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 993,
+      "evidence_excluded": 21,
+      "evidence_truncated": false
+    },
+    {
+      "file": "254530.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1022,
+      "evidence_excluded": 18,
+      "evidence_truncated": false
+    },
+    {
+      "file": "254662.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1008,
+      "evidence_excluded": 19,
+      "evidence_truncated": false
+    },
+    {
+      "file": "254951.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 24,
+      "evidence_truncated": true
+    },
+    {
+      "file": "255462.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "256937.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "257188.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "257371.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "257873.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "258155.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "258768.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1022,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "259154.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "259339.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "259482.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "259552.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "259952.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "260805.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "261202.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "261310.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    },
+    {
+      "file": "261794.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 12,
+      "evidence_truncated": true
+    },
+    {
+      "file": "261813.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "262045.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "262639.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "262911.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "263194.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "263478.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "265016.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "265305.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1022,
+      "evidence_excluded": 20,
+      "evidence_truncated": false
+    },
+    {
+      "file": "265386.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "265650.json",
+      "label": "half",
+      "original_label": "unproven",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 11,
+      "evidence_truncated": true
+    },
+    {
+      "file": "265651.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 18,
+      "evidence_truncated": true
+    },
+    {
+      "file": "265781.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1010,
+      "evidence_excluded": 19,
+      "evidence_truncated": false
+    },
+    {
+      "file": "266050.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 21,
+      "evidence_truncated": true
+    },
+    {
+      "file": "266247.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1024,
+      "evidence_excluded": 16,
+      "evidence_truncated": true
+    },
+    {
+      "file": "266752.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 15,
+      "evidence_truncated": true
+    },
+    {
+      "file": "268371.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1023,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "268609.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 23,
+      "evidence_truncated": true
+    },
+    {
+      "file": "268864.json",
+      "label": "true",
+      "original_label": "true",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 22,
+      "evidence_truncated": true
+    },
+    {
+      "file": "269059.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1023,
+      "evidence_excluded": 7,
+      "evidence_truncated": true
+    },
+    {
+      "file": "269799.json",
+      "label": "true",
+      "original_label": "correct attribution",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 14,
+      "evidence_truncated": true
+    },
+    {
+      "file": "270279.json",
+      "label": "false",
+      "original_label": "false",
+      "verdict": "false",
+      "raw_output": "false",
+      "evidence_used": 1024,
+      "evidence_excluded": 19,
+      "evidence_truncated": true
+    },
+    {
+      "file": "270829.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 17,
+      "evidence_truncated": true
+    },
+    {
+      "file": "271829.json",
+      "label": "false",
+      "original_label": "Mostly False",
+      "verdict": "true",
+      "raw_output": "true",
+      "evidence_used": 1024,
+      "evidence_excluded": 13,
+      "evidence_truncated": true
+    },
+    {
+      "file": "60584.json",
+      "label": "half",
+      "original_label": "mixture",
+      "verdict": "half",
+      "raw_output": "half",
+      "evidence_used": 1023,
+      "evidence_excluded": 20,
+      "evidence_truncated": true
+    }
+  ],
+  "model": {
+    "base_model_snapshot": "C:\\Users\\Gagan\\.cache\\huggingface\\hub\\models--meta-llama--Llama-3.2-3B-Instruct\\snapshots\\0cb88a4f764b7a12671c53f0838cd831a0843b95",
+    "adapter_path": "C:\\Users\\Gagan\\OneDrive\\Desktop\\MLProject\\ML-major-project\\models\\factllama\\factllama_final_adapter_v2",
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "compute_dtype": "bfloat16",
+    "double_quant": true,
+    "device": "cuda:0"
+  }
+}

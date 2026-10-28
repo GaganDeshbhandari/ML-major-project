@@ -293,13 +293,13 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                 "Regenerate this pending report from the project root:",
                 "",
                 "```powershell",
-                ".\\venv312\\Scripts\\python.exe -m evaluation.claim_ranking.baseline",
+                ".\\venv\\Scripts\\python.exe -m evaluation.claim_ranking.baseline",
                 "```",
                 "",
                 "Once a labeled dataset exists, run:",
                 "",
                 "```powershell",
-                ".\\venv312\\Scripts\\python.exe -m evaluation.claim_ranking.baseline "
+                ".\\venv\\Scripts\\python.exe -m evaluation.claim_ranking.baseline "
                 "--dataset <path-to-dataset.json> --k 1 3 5 10",
                 "```",
                 "",
@@ -415,7 +415,7 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             "The report records the dataset path and SHA-256. Recompute with:",
             "",
             "```powershell",
-            ".\\venv312\\Scripts\\python.exe -m evaluation.claim_ranking.baseline "
+            ".\\venv\\Scripts\\python.exe -m evaluation.claim_ranking.baseline "
             "--dataset <path-to-dataset.json> --k 1 3 5 10",
             "```",
             "",
