@@ -1,0 +1,22 @@
+# FactLLaMA inference environment
+# Platform: native Windows 11, Python 3.12, NVIDIA RTX 2050 (4 GB VRAM)
+# PyTorch is the CUDA 13.0 build from the official PyTorch wheel index.
+#
+# Install with:
+#   python -m pip install -r requirements-factllama.txt
+#
+# For the fully pinned transitive environment validated on 2026-10-27, use
+# requirements-factllama.lock instead.
+#
+--extra-index-url https://download.pytorch.org/whl/cu130
+
+torch==2.14.1+cu130
+transformers==5.19.0
+peft==0.21.2
+accelerate==1.15.0
+bitsandbytes==0.50.2
+safetensors==0.8.0
+huggingface_hub==1.33.0
+tokenizers==0.23.3
+numpy==2.5.4
+pytest==9.1.1

@@ -16,9 +16,9 @@ Design notes:
     * Failures are reported with specific exceptions rather than generic
       import or hub errors.
 
-Real loading with the trained adapter has not been verified yet; the
-adapter still has to be copied from Google Drive (see
-``docs/factllama.md``).
+Real loading with the trained adapter was verified against the cached
+Llama-3.2-3B-Instruct snapshot; see ``docs/factllama.md`` for the validation
+details.
 """
 
 from __future__ import annotations
