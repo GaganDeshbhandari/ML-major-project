@@ -16,6 +16,20 @@ const EXPERIMENT_LABELS = {
   nli_stance_classification: 'NLI stance classification',
 };
 
+const RANDOM_FOREST_METRICS = [
+  ['Accuracy', '90.0%', '88.5%'],
+  ['Precision', '88.0%', '87.0%'],
+  ['Recall', '87.0%', '86.0%'],
+  ['F1-score', '87.5%', '86.5%'],
+];
+
+const CROSS_ENCODER_METRICS = [
+  ['MRR', '0.85'],
+  ['nDCG@5', '0.88'],
+  ['Precision@5', '0.80'],
+  ['Recall@5', '0.75'],
+];
+
 function experimentRows(experiment) {
   const metrics = experiment?.metrics || {};
   if (experiment?.name === 'factllama_fact_verification') {
@@ -129,6 +143,47 @@ export default function ModelEvaluationPage() {
           )}
         </section>
       )}
+
+      <section className="evaluation-methods">
+        <div className="evaluation-section-heading">
+          <div>
+            <h2>Illustrative prioritization metrics</h2>
+            <p>Mock demo values for the current interface; these are not experimentally measured results.</p>
+          </div>
+          <span className="sample-pill">Demo data</span>
+        </div>
+        <div className="evaluation-demo-grid">
+          <section className="method-card">
+            <div className="method-card-heading">
+              <div>
+                <h3>Random Forest claim prioritization</h3>
+                <p>O1 prioritizes predicted False-class probability; O2 prioritizes predicted High TPB-class probability.</p>
+              </div>
+            </div>
+            <div className="demo-metric-table demo-metric-table--two-columns">
+              <div className="demo-metric-header"><span>Metric</span><strong>O1 — False-Claim Prioritization</strong><strong>O2 — Misconception Prioritization</strong></div>
+              {RANDOM_FOREST_METRICS.map(([label, o1, o2]) => (
+                <div className="demo-metric-row" key={label}><span>{label}</span><strong>{o1}</strong><strong>{o2}</strong></div>
+              ))}
+            </div>
+          </section>
+
+          <section className="method-card">
+            <div className="method-card-heading">
+              <div>
+                <h3>Cross-Encoder evidence reranking</h3>
+                <p>Model: cross-encoder/ms-marco-MiniLM-L-6-v2</p>
+              </div>
+            </div>
+            <div className="demo-metric-table">
+              {CROSS_ENCODER_METRICS.map(([label, value]) => (
+                <div className="demo-metric-row" key={label}><span>{label}</span><strong>{value}</strong></div>
+              ))}
+            </div>
+            <p className="demo-metric-note">MRR measures the rank of the first relevant result. nDCG@5 measures ranking quality among the top five results. Precision@5 measures the proportion of the top five that are relevant. Recall@5 measures the proportion of all relevant results retrieved in the top five.</p>
+          </section>
+        </div>
+      </section>
 
       <footer className="page-footer evaluation-footer"><span className="footer-dot" /> FactLLaMA and NLI stance metrics are read from saved evaluation artifacts.</footer>
     </div>
