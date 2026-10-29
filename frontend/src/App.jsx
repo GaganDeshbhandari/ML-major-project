@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, CircleHelp, FileSpreadsheet, Gauge, LayoutDashboard, ListChecks, Menu, Settings } from 'lucide-react';
+import { ChevronRight, FileSpreadsheet, Gauge, LayoutDashboard, Menu } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { navigation, objectives } from './data/sampleData';
 import { createPrioritizationRun, previewDataset, validateDataset } from './api/client';
@@ -8,7 +8,7 @@ import RankedClaimsPage from './pages/RankedClaimsPage';
 import ClaimDetailPage from './pages/ClaimDetailPage';
 import ModelEvaluationPage from './pages/ModelEvaluationPage';
 
-const icons = { dashboard: LayoutDashboard, runs: ListChecks, claims: FileSpreadsheet, evaluation: Gauge, settings: Settings };
+const icons = { dashboard: LayoutDashboard, claims: FileSpreadsheet, evaluation: Gauge };
 
 export default function App() {
   const [activePage, setActivePage] = useState('Dashboard');
@@ -30,7 +30,6 @@ export default function App() {
   const handleNavigation = (label) => {
     setActivePage(label);
     setMobileNavOpen(false);
-    setRunMessage(label === 'Prioritization runs' || label === 'Settings' ? `${label} is not part of this prototype yet.` : '');
   };
 
   const validateFile = async (file, datasetType, tokenRef, setValidation, setPreview) => {
@@ -132,7 +131,6 @@ export default function App() {
             return <button className={`nav-item ${isActive ? 'nav-item--active' : ''}`} key={label} onClick={() => handleNavigation(label)}><Icon size={18} strokeWidth={isActive ? 2.4 : 2} /><span>{label}</span>{activePage === label && <ChevronRight className="nav-arrow" size={16} />}</button>;
           })}
         </nav>
-        <div className="sidebar-footer"><div className="help-icon"><CircleHelp size={17} /></div><div><strong>Need help?</strong><span>Read the documentation</span></div></div>
       </aside>
       <main className="workspace">{page}</main>
     </div>

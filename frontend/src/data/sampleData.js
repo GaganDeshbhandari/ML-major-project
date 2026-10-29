@@ -1,9 +1,7 @@
 export const navigation = [
   { label: 'Dashboard', iconName: 'dashboard' },
-  { label: 'Prioritization runs', iconName: 'runs' },
   { label: 'Claims', iconName: 'claims' },
   { label: 'Model evaluation', iconName: 'evaluation' },
-  { label: 'Settings', iconName: 'settings' },
 ];
 
 export const objectives = [
