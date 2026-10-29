@@ -334,3 +334,54 @@ h2 { color: #21304b; font: 700 16px 'Space Grotesk', sans-serif; letter-spacing:
   .retrieval-metrics { gap: 8px; }
   .retrieval-metrics strong { font-size: 18px; }
 }
+
+/* API-backed states */
+.upload-validation { margin-top: 10px; border-radius: 6px; padding: 8px 9px; font-size: 10px; line-height: 1.45; }
+.upload-validation strong { display: block; font-size: 10px; }
+.upload-validation ul { margin: 5px 0 0; padding-left: 16px; }
+.upload-validation--checking { color: #55739f; background: #f4f8ff; }
+.upload-validation--valid { color: #2d7d62; background: #eefaf5; }
+.upload-validation--invalid, .upload-validation--error { color: #b3544c; background: #fff3f1; }
+.upload-warning-list { color: #9a732d; }
+.preview-panel { padding: 19px; margin-top: 16px; }
+.preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 15px; }
+.preview-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 7px; color: #52647e; font-size: 11px; }
+.preview-heading span { color: #93a0b2; font-size: 9px; }
+.preview-scroll { overflow-x: auto; border: 1px solid #e7edf5; border-radius: 6px; }
+.preview-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+.preview-table th { color: #71819a; background: #f7f9fc; text-align: left; font-weight: 700; padding: 6px 8px; white-space: nowrap; }
+.preview-table td { color: #52647e; border-top: 1px solid #eef2f7; padding: 6px 8px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.state-panel { padding: 34px; margin-bottom: 20px; text-align: center; }
+.state-icon { width: 42px; height: 42px; display: grid; place-items: center; color: #2563eb; background: #eaf2ff; border-radius: 10px; margin: 0 auto 13px; }
+.state-panel h2 { color: #263753; font-size: 17px; }
+.state-panel p { color: #71819a; font-size: 12px; line-height: 1.55; max-width: 560px; margin: 8px auto 0; }
+.state-panel .run-button { max-width: 260px; margin: 19px auto 0; }
+.state-progress { display: block; color: #7990b5; font-size: 10px; margin-top: 7px; }
+.state-note { display: block; color: #8796ab; font-size: 10px; line-height: 1.5; margin-top: 9px; }
+.sample-notice--warning { color: #8a6726; background: #fffbf0; border-color: #f0e2c2; }
+.sample-notice--warning svg { color: #b6872f; }
+.muted-value { color: #a0adbd; font: 600 12px 'Space Grotesk', sans-serif; }
+.pagination { display: inline-flex; align-items: center; gap: 9px; }
+.text-button:disabled { color: #b5c1d2; cursor: not-allowed; }
+.metric-details { border-top: 1px solid #edf1f6; margin-top: 13px; padding-top: 10px; }
+.metric-details summary { color: #52647e; font-size: 11px; font-weight: 700; cursor: pointer; }
+.metric-details .method-bars { margin-top: 12px; }
+.method-unavailable { color: #8796ab; background: #f7f9fc; border-radius: 6px; padding: 10px; font-size: 11px; line-height: 1.5; margin-top: 15px; }
+.evaluation-notice--error { color: #a34f48; background: #fff4f2; border-color: #f0d4d0; }
+.evaluation-notice--error svg { color: #c15f55; }
+.evaluation-notice .text-button { margin-left: auto; }
+.detail-action-button:disabled { color: #a9bddf; background: #dce8f8; cursor: not-allowed; }
+.action-message--error { color: #a34f48; background: #fff4f2; }
+.factcheck-result { margin-top: 13px; border: 1px solid #e1e9f3; border-radius: 7px; padding: 11px; background: #fbfdff; }
+.factcheck-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.factcheck-heading strong { color: #405673; font-size: 10px; }
+.factcheck-result p { margin-top: 6px; }
+.factcheck-verdict { color: #405673; font-size: 11px; }
+.factcheck-verdict strong { color: #2563eb; font-size: 13px; }
+.factcheck-output { max-height: 180px; overflow: auto; white-space: pre-wrap; word-break: break-word; color: #52647e; background: #fff; border: 1px solid #e7edf5; border-radius: 5px; padding: 8px; font: 10px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; margin-top: 7px; }
+.factcheck-limitations { margin: 9px 0 0; padding-left: 16px; color: #8796ab; font-size: 9px; line-height: 1.5; }
+.factcheck-result details { margin-top: 8px; }
+.factcheck-result summary { color: #2563eb; font-size: 10px; font-weight: 700; cursor: pointer; }
+@media (max-width: 960px) {
+  .preview-grid { grid-template-columns: 1fr; }
+}

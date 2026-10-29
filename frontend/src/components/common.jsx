@@ -1,31 +1,39 @@
+import React from 'react';
 import { Check, FileSpreadsheet, X, UploadCloud } from 'lucide-react';
 import { useState } from 'react';
 
 export function PriorityBadge({ priority }) {
-  return <span className={`priority-badge priority-${priority.toLowerCase()}`}><span />{priority}</span>;
+  const label = String(priority || 'Unknown');
+  return <span className={`priority-badge priority-${label.toLowerCase()}`}><span />{label}</span>;
 }
 
 export function StatusBadge({ status }) {
-  return <span className={`status-badge status-${status.toLowerCase().replace(' ', '-')}`}>{status}</span>;
+  const label = String(status || 'Unknown');
+  return <span className={`status-badge status-${label.toLowerCase().replaceAll(' ', '-')}`}>{label}</span>;
 }
 
 export function MetricCard({ label, value, detail }) {
   return <div className="metric-card"><span>{label}</span><strong>{value}</strong><small>{detail}</small></div>;
 }
 
-export function EvidenceInvestigationCard({ type, title, date, summary, relevance }) {
+export function EvidenceInvestigationCard({ type, title, date, summary, relevance, url, source }) {
   return (
-    <article className={`investigation-evidence-card evidence-type-${type.toLowerCase()}`}>
-      <div className="evidence-card-topline"><span className="evidence-type-badge"><span />{type} evidence</span><span>Sample</span></div>
-      <h3>{title}</h3>
-      <div className="evidence-date">{date} · Mock publication date</div>
-      <p>{summary}</p>
-      <div className="relevance-row"><span>Illustrative relevance</span><strong>{relevance}</strong></div>
+    <article className={`investigation-evidence-card evidence-type-${String(type || 'evidence').toLowerCase()}`}>
+      <div className="evidence-card-topline">
+        <span className="evidence-type-badge"><span />{type || 'Evidence'}</span>
+        <span>{source || 'Stored evidence'}</span>
+      </div>
+      <h3>{url ? <a href={url} target="_blank" rel="noreferrer">{title}</a> : title}</h3>
+      {date && <div className="evidence-date">{date}</div>}
+      <p>{summary || 'No summary text was stored for this evidence item.'}</p>
+      {relevance !== null && relevance !== undefined && (
+        <div className="relevance-row"><span>Stance confidence</span><strong>{formatMetric(relevance, 2)}</strong></div>
+      )}
     </article>
   );
 }
 
-export function UploadCard({ title, hint, file, onFileChange }) {
+export function UploadCard({ title, hint, file, onFileChange, validation }) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
   const inputId = title.toLowerCase().replaceAll(' ', '-');
@@ -64,7 +72,30 @@ export function UploadCard({ title, hint, file, onFileChange }) {
           <input id={inputId} type="file" accept=".csv,text/csv" onChange={(event) => acceptFile(event.target.files[0])} />
         </label>
       )}
+      {validation && <ValidationStatus validation={validation} />}
       {error && <div className="upload-error" role="alert">{error}</div>}
+    </div>
+  );
+}
+
+function ValidationStatus({ validation }) {
+  const { status, validation: result, message } = validation;
+  const errors = result?.errors || [];
+  const warnings = result?.warnings || [];
+  if (status === 'checking') {
+    return <div className="upload-validation upload-validation--checking" role="status">Validating CSV with the API…</div>;
+  }
+  if (status === 'error') {
+    return <div className="upload-validation upload-validation--error" role="alert">{message || 'Validation failed.'}</div>;
+  }
+  return (
+    <div className={`upload-validation upload-validation--${status}`} role="status">
+      <strong>
+        {status === 'valid' ? 'Valid CSV' : 'CSV needs fixes'}
+        {result ? ` · ${result.row_count} row${result.row_count === 1 ? '' : 's'}` : ''}
+      </strong>
+      {errors.length > 0 && <ul>{errors.map((item) => <li key={item}>{item}</li>)}</ul>}
+      {warnings.length > 0 && <ul className="upload-warning-list">{warnings.map((item) => <li key={item}>{item}</li>)}</ul>}
     </div>
   );
 }
@@ -83,7 +114,31 @@ export function formatFileSize(bytes) {
 }
 
 export function ecsClass(ecs) {
+  if (ecs === null || ecs === undefined) return 'unavailable';
   if (ecs >= 0.7) return 'high';
   if (ecs >= 0.4) return 'medium';
   return 'low';
+}
+
+export function formatMetric(value, digits = 3) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return '—';
+  if (typeof value !== 'number') return String(value);
+  return Number.isInteger(value) ? String(value) : value.toFixed(digits);
+}
+
+export function formatPercent(value, digits = 1) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return '—';
+  return `${(Number(value) * 100).toFixed(digits)}%`;
+}
+
+export function formatDateTime(value) {
+  if (!value) return 'Unavailable';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString();
+}
+
+export function humanize(value) {
+  if (!value) return 'Unknown';
+  return String(value).replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 }

@@ -2,6 +2,17 @@
 
 from src.ranking_fusion import DEFAULT_RRF_K, RankingFusionError
 
+from .claimrank_service import (
+    FUSION_METHOD,
+    ClaimRankEntry,
+    ClaimRankObjective,
+    ClaimRankRun,
+    ClaimRankService,
+    ClaimRankServiceError,
+    FinalPriority,
+    OriginalPriority,
+    parse_objective,
+)
 from .prioritization_retrieval import (
     ECSErrorInfo,
     PrioritizationRetrievalResult,
@@ -21,15 +32,24 @@ from .ranking_fusion import (
 
 __all__ = [
     "DEFAULT_RRF_K",
+    "FUSION_METHOD",
+    "ClaimRankEntry",
+    "ClaimRankObjective",
+    "ClaimRankRun",
+    "ClaimRankService",
+    "ClaimRankServiceError",
     "ECSErrorInfo",
     "FactLLaMAErrorInfo",
     "FactLLaMASelectionError",
     "FactLLaMASelectionService",
     "FactLLaMAVerificationResult",
+    "FinalPriority",
     "FusedPrioritizationResult",
+    "OriginalPriority",
     "PrioritizationRetrievalResult",
     "RankingFusionError",
     "RetrievalErrorInfo",
     "fuse_prioritization_results",
+    "parse_objective",
     "prioritize_and_retrieve",
 ]
