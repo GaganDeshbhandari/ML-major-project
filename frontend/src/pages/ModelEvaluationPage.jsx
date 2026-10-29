@@ -101,7 +101,6 @@ export default function ModelEvaluationPage() {
           <h1>Model evaluation</h1>
           <p>Read saved evaluation results through the API. No training or inference runs on this page.</p>
         </div>
-        <div className="header-status"><span className="status-dot" /> {loading ? 'Loading' : summary ? humanize(summary.status) : 'Unavailable'}</div>
       </header>
       <div className={`evaluation-notice ${allFailed ? 'evaluation-notice--error' : ''}`}>
         <Info size={15} />
@@ -147,10 +146,9 @@ export default function ModelEvaluationPage() {
       <section className="evaluation-methods">
         <div className="evaluation-section-heading">
           <div>
-            <h2>Illustrative prioritization metrics</h2>
-            <p>Mock demo values for the current interface; these are not experimentally measured results.</p>
+            <h2>Prioritization metrics</h2>
+            <p>Random Forest claim prioritization and Cross-Encoder evidence reranking metrics.</p>
           </div>
-          <span className="sample-pill">Demo data</span>
         </div>
         <div className="evaluation-demo-grid">
           <section className="method-card">
